@@ -51,7 +51,7 @@ console.log(__dirname);
 
 
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to railway application." });
+  res.json({ message: "Welcome to treatment application." });
 });
 
 
