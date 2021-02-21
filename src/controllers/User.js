@@ -3,56 +3,30 @@ const { uuid } = require('uuidv4');
 const db = require('../db');
 const Helper = require('./Helper');
 
-const User = {
-  /**
-   * Create A User
-   * @param {object} req 
-   * @param {object} res
-   * @returns {object} reflection object 
-   */
-  async create(req, res) {
-    if (!req.body.email || !req.body.password || !req.body.credit_card || !req.body.address ) {
-      return res.status(400).send({'message': 'Some values are missing'});
-    }
-    if (!Helper.isValidEmail(req.body.email)) {
-      return res.status(400).send({ 'message': 'Please enter a valid email address' });
-    }
-    const hashPassword = Helper.hashPassword(req.body.password);
 
-    const createQueryUser = `INSERT INTO users(id, email, password,user_type,created_date, modified_date) VALUES($1, $2, $3, $4, $5, $6) returning *`;
-
-    const createQueryAgent = `INSERT INTO booking_agents(id, credit_card, address, created_date) VALUES($1, $2, $3, $4) returning *`;
-
+const CreateNewUser = {
+  async globalMobile( mobile_number){
+    const createQueryUser = `INSERT INTO users(user_id, mobile_number,created_date, modified_date) VALUES($1, $2, $3, $4) returning *`;
     const values = [
       uuid(),
-      req.body.email,
-      hashPassword,
-      "agent",
+      mobile_number,
       moment(new Date()),
-      moment(new Date())
-    ];
-
-    const agentValues = [
-      values[0],
-      req.body.credit_card,
-      req.body.address,
       moment(new Date())
     ];
 
     try {
       const { rows } = await db.query(createQueryUser, values);
-      const token = Helper.generateToken(rows[0].id);
-
-      await db.query(createQueryAgent, agentValues);
-
-      return res.status(201).send({ token });
+      const token = Helper.generateToken(rows[0].user_id);
+      return token;
     } catch(error) {
-      if (error.routine === '_bt_check_unique') {
-        return res.status(400).send({ 'message': 'User with that EMAIL already exist' })
-      }
-      return res.status(400).send(error);
+      return null;
     }
   },
+}
+
+
+const User = {
+ 
   /**
    * Login
    * @param {object} req 
@@ -61,27 +35,64 @@ const User = {
    */
   async login(req, res) {
 
-    if (!req.body.email || !req.body.password) {
+    console.log(req.body)
+
+    // send mobile_number, auth_token (firebase) and user_type (p for patient, d for doctor,s for staff, r for relative)
+
+    // verify auth token
+
+    if (!req.body.mobile_number || !req.body.user_type) {
       return res.status(400).send({'message': 'Some values are missing'});
     }
-    if (!Helper.isValidEmail(req.body.email)) {
-      return res.status(400).send({ 'message': 'Please enter a valid email address' });
+
+    if (!Helper.isValidMobile(req.body.mobile_number)) {
+      return res.status(400).send({ 'message': 'Please enter a valid mobile number' });
     }
-    const text = 'SELECT * FROM users WHERE email = $1';
+
+    if (!(req.body.user_type == 'p' || req.body.user_type == 'd' || req.body.user_type == 's' || req.body.user_type == 'r' )) {
+      return res.status(400).send({'message': 'user_type is invalid'});
+    }
+    
+    const text = 'SELECT * FROM users WHERE mobile_number = $1';
+    const checkDoctor = 'SELECT * FROM doctor WHERE user_id = $1';
+    const checkPatient = 'SELECT * FROM patient WHERE user_id = $1';
+    const checkStaff = 'SELECT * FROM staff WHERE user_id = $1';
+    const checkRelative = 'SELECT * FROM relative WHERE user_id = $1';
     try {
-      const { rows } = await db.query(text, [req.body.email]);
+      const { rows } = await db.query(text, [req.body.mobile_number]);
+      console.log(rows)
       if (!rows[0]) {
-        return res.status(400).send({'message': 'The credentials you provided is incorrect'});
+        console.log('first time on app')
+        // first time on app
+        var newUserToken = await CreateNewUser.globalMobile(req.body.mobile_number)
+        if(!newUserToken){
+          res.status(400).send({'message': 'new user addition failed'});
+        }
+        return res.status(250).send({'message': 'Please Register the new use_type',token : newUserToken});
       }
-      if(!Helper.comparePassword(rows[0].password, req.body.password)) {
-        return res.status(400).send({ 'message': 'The credentials you provided is incorrect' });
+
+      var firstTime = null;
+      // user_type doesnt exists
+      if(req.body.user_type == 'p'){
+        firstTime = await db.query(checkPatient, [rows[0].user_id]);
+      }else if(req.body.user_type == 'd'){
+        firstTime = await db.query(checkDoctor, [rows[0].user_id]);
+      }else if(req.body.user_type == 's'){
+        firstTime = await db.query(checkStaff, [rows[0].user_id]);
+      }else if(req.body.user_type == 'r'){
+        firstTime = await db.query(checkRelative, [rows[0].user_id]);
       }
-      const token = Helper.generateToken(rows[0].id);
-      const user_type = rows[0].user_type;
-      const id = rows[0].id;
-      return res.status(200).send({ token , user_type , id});
+
+      const token = Helper.generateToken(rows[0].user_id);
+      const id = Helper.generateToken(rows[0].user_id);
+      if(!firstTime.rows[0]){
+        return res.status(250).send({'message': 'Please Register the new use_type',token});
+      }
+
+      return res.status(200).send({ token , id });
     } catch(error) {
-      return res.status(400).send(error)
+      console.log(error)
+      return res.status(400).send({'message': 'something wrong',error});
     }
   },
   /**
@@ -99,7 +110,7 @@ const User = {
       }
       return res.status(204).send({ 'message': 'deleted' });
     } catch(error) {
-      return res.status(400).send(error);
+      return res.status(400).send({'message': 'something wrong',error});
     }
   }
 }

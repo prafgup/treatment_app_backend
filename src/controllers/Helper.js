@@ -27,6 +27,9 @@ const Helper = {
   isValidEmail(email) {
     return /\S+@\S+\.\S+/.test(email);
   },
+  isValidMobile(mobilenumber) {
+    return /[5-9][0-9]{9}/.test(mobilenumber);
+  },
   /**
    * Gnerate Token
    * @param {string} id

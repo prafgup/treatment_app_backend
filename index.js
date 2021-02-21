@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const pool = require("./src/db.js");
-const PORT =process.env.PORT||5000;
+const PORT = process.env.PORT||5000;
 const path=require("path");
 const bodyParser = require("body-parser");
 const dotenv = require('dotenv');
@@ -15,10 +15,6 @@ const  Ticket = require('./src/controllers/Ticket.js');
 
 const  Auth = require('./src/middleware/Auth.js');
 
-
-
-
-const  dbOperations = require("./src/dbscripts.js");
 
 dotenv.config();
 
@@ -55,16 +51,18 @@ app.get("/", (req, res) => {
 });
 
 
-app.post('/api/v1/users/login',UserWithDb.login);  // email , password
-app.post('/api/v1/users/create', UserWithDb.create);  // email , password
-app.post('/api/v1/admin/create_train', Auth.verifyTokenAdmin, AdminWithDb.createTrain); // different middleware for admins
-app.get('/api/v1/get_all_train', Auth.verifyToken, AdminWithDb.getAllTrains);
+app.post('/api/v1/users/login',UserWithDb.login);  // mobile_number , auth_token , user_type
 
-app.get('/api/v1/users/get_all_my_tickets', Auth.verifyToken, Ticket.getAllTickets);
-app.post('/api/v1/users/create_ticket', Auth.verifyToken, Ticket.createTicket);
 
-app.get('/api/v1/users/get_all_passenger_by_ticket', Auth.verifyToken, Ticket.getAllPassengerByTicket);
-app.get('/api/v1/users/get_all_passenger_by_train', Auth.verifyToken, Ticket.getAllPassengerByTrain);
+// app.post('/api/v1/users/create', UserWithDb.create);  // email , password
+// app.post('/api/v1/admin/create_train', Auth.verifyTokenAdmin, AdminWithDb.createTrain); // different middleware for admins
+// app.get('/api/v1/get_all_train', Auth.verifyToken, AdminWithDb.getAllTrains);
+
+// app.get('/api/v1/users/get_all_my_tickets', Auth.verifyToken, Ticket.getAllTickets);
+// app.post('/api/v1/users/create_ticket', Auth.verifyToken, Ticket.createTicket);
+
+// app.get('/api/v1/users/get_all_passenger_by_ticket', Auth.verifyToken, Ticket.getAllPassengerByTicket);
+// app.get('/api/v1/users/get_all_passenger_by_train', Auth.verifyToken, Ticket.getAllPassengerByTrain);
 
 
 app.get("*",(req,res)=>{
@@ -75,7 +73,7 @@ app.get("*",(req,res)=>{
 
 
 app.listen(PORT, () => {
-  console.log('server has started on port ${PORT}');
+  console.log('server has started on port ' + PORT);
 });
 
 
