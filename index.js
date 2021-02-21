@@ -15,7 +15,6 @@ const  Ticket = require('./src/controllers/Ticket.js');
 
 const  Auth = require('./src/middleware/Auth.js');
 
-
 dotenv.config();
 
 // parse requests of content-type - application/json
