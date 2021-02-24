@@ -12,14 +12,14 @@ const Auth = {
   async verifyToken(req, res, next) {
     console.log(req.body)
     console.log(req.headers)
-    const token = req.headers['x-access-token'];
+    const token = req.body['x-access-token'];
     console.log("Verifying Token");
     if(!token) {
       return res.status(400).send({ 'message': 'Token is not provided' });
     }
     try {
       const decoded = await jwt.verify(token, process.env.SECRET);
-      const text = 'SELECT * FROM users WHERE id = $1';
+      const text = 'SELECT * FROM users WHERE user_id = $1';
       const { rows } = await db.query(text, [decoded.userId]);
       if(!rows[0]) {
         return res.status(400).send({ 'message': 'The token you provided is invalid' });

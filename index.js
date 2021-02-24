@@ -9,6 +9,9 @@ const dotenv = require('dotenv');
 
 
 const  UserWithDb = require('./src/controllers/User.js');
+const  ProfileWithDb = require('./src/controllers/Profile.js');
+
+
 const  AdminWithDb = require('./src/controllers/Admin.js');
 const  Ticket = require('./src/controllers/Ticket.js');
 
@@ -51,6 +54,12 @@ app.get("/", (req, res) => {
 
 
 app.post('/api/v1/users/login',UserWithDb.login);  // mobile_number , auth_token , user_type
+app.post('/api/v1/register/doctor', Auth.verifyToken, UserWithDb.registerDoctor);
+app.post('/api/v1/register/staff', Auth.verifyToken, UserWithDb.registerStaff);
+app.post('/api/v1/register/patient', Auth.verifyToken, UserWithDb.registerPatient);
+
+app.post('/api/v1/profile/update', Auth.verifyToken, ProfileWithDb.updateMyProfile);
+app.get('/api/v1/profile/get', Auth.verifyToken, ProfileWithDb.getMyProfile);
 
 
 // app.post('/api/v1/users/create', UserWithDb.create);  // email , password
