@@ -84,7 +84,7 @@ const User = {
       }
 
       const token = Helper.generateToken(rows[0].user_id);
-      const id = Helper.generateToken(rows[0].user_id);
+      const id = rows[0].user_id;
       if(!firstTime.rows[0]){
         return res.status(250).send({'message': 'Please Register the new use_type',token});
       }
