@@ -1,5 +1,4 @@
-# Railway Reservation System
+# Treatment Application Backend
 
-Created by Rohit Tuli and Praful Gupta as our CS301 Databases course project. 
 
 
