@@ -10,6 +10,7 @@ const dotenv = require('dotenv');
 
 const  UserWithDb = require('./src/controllers/User.js');
 const  ProfileWithDb = require('./src/controllers/Profile.js');
+const DoctorWithDb = require('./src/controllers/Doctor.js');
 
 const  Auth = require('./src/middleware/Auth.js');
 
@@ -54,6 +55,7 @@ app.post('/api/v1/register/staff', Auth.verifyToken, UserWithDb.registerStaff);
 app.post('/api/v1/register/patient', Auth.verifyToken, UserWithDb.registerPatient);
 app.post('/api/v1/profile/update', Auth.verifyToken, ProfileWithDb.updateMyProfile);
 app.get('/api/v1/profile/get', Auth.verifyToken, ProfileWithDb.getMyProfile);
+app.get('/api/v1/doctor/get_all_patients', Auth.verifyToken, DoctorWithDb.getAllPatients);
 
 
 app.get("*",(req,res)=>{

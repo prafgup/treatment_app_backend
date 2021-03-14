@@ -40,7 +40,7 @@ const User = {
     // send mobile_number, auth_token (firebase) and user_type (p for patient, d for doctor,s for staff, r for relative)
 
     // verify auth token
-
+    
     if (!req.body.mobile_number || !req.body.user_type) {
       return res.status(400).send({'message': 'Some values are missing'});
     }
@@ -60,6 +60,7 @@ const User = {
     const checkRelative = 'SELECT * FROM relative WHERE user_id = $1';
     try {
       const { rows } = await db.query(text, [req.body.mobile_number]);
+      console.log("kasjdfksjf");
       console.log(rows)
       if (!rows[0]) {
         console.log('first time on app')
