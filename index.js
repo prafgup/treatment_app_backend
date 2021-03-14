@@ -13,6 +13,7 @@ const  ProfileWithDb = require('./src/controllers/Profile.js');
 const DoctorWithDb = require('./src/controllers/Doctor.js');
 
 const  Auth = require('./src/middleware/Auth.js');
+const helper = require('./src/controllers/Helper.js');
 
 dotenv.config();
 

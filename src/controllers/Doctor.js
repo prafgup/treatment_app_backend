@@ -3,13 +3,14 @@ const { uuid } = require('uuidv4');
 const db = require('../db');
 const Helper = require('./Helper');
 
+const date_format = "YYYY-MM-DD";
 
 const Doctor = {
 
   async getDoctorProfile(req, res) {
     console.log(req.body)
     const myId = req.user.id;
-    const myProfile = 'SELECT * FROM doctor where user_id = $1';
+    const myProfile = 'SELECT * FROM doctor where user_id = ($1)';
     try {
       const { rows } = await db.query(myProfile, [myId]);
       return res.status(200).send({ "profile" : rows[0] });
@@ -22,7 +23,7 @@ const Doctor = {
     console.log(req.body)
     const myId = req.user.id;
 
-    const getMyProfile = 'SELECT * FROM doctor where user_id = $1';
+    const getMyProfile = 'SELECT * FROM doctor where user_id = ($1)';
     const createProfile = `INSERT INTO doctor(user_id, department, designation, hospital, created_date, modified_date) VALUES($1, $2, $3, $4,$5, $6) returning *`;
     const updateProfile = `UPDATE profile_page SET department = ($1), designation = ($2), hospital = ($3), modified_date = ($4) WHERE user_id = ($5) returning *`;
     try {
@@ -69,9 +70,9 @@ const Doctor = {
   async getAllPatients(req, res){
     console.log(req.body)
     const myId = req.user.id;
-    const getPatientData = 'SELECT profile_page.first_name, profile_page.last_name, profile_page.profile_pic, treatment.treatment_name, treatment.treatment_day, date_info.marked_by_patient, questionnaire.question, questionnaire.response FROM (((treatment INNER JOIN profile_page ON treatment.patient_id = profile_page.user_id AND treatment.doctor_id = $1) INNER JOIN questionnaire ON questionnaire.treatment_id = treatment.treatment_id AND questionnaire.week_no = treatment.treatment_day/7) INNER JOIN date_info ON date_info.treatment_id = treatment.treatment_id AND date_info.today_date = {2})';
+    const getPatientData = 'SELECT profile_page.first_name, profile_page.last_name, profile_page.profile_pic, treatment.treatment_name, treatment.treatment_day, date_info.marked_by_patient, questionnaire.question, questionnaire.response FROM (((treatment INNER JOIN profile_page ON treatment.patient_id = profile_page.user_id AND treatment.doctor_id = ($1)) INNER JOIN questionnaire ON questionnaire.treatment_id = treatment.treatment_id AND questionnaire.week_no = treatment.treatment_day/7) INNER JOIN date_info ON date_info.treatment_id = treatment.treatment_id AND date_info.today_date = ($2))';
     try{
-        const { rows } = await db.query(getPatientData, [myId,moment(new Date())]);
+        const { rows } = await db.query(getPatientData, [myId,moment(new Date()).format(date_format)]);
         return res.status(200).send(rows);
     }
     catch(error){
