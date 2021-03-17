@@ -10,8 +10,10 @@ const dotenv = require('dotenv');
 
 const  UserWithDb = require('./src/controllers/User.js');
 const  ProfileWithDb = require('./src/controllers/Profile.js');
+const DoctorWithDb = require('./src/controllers/Doctor.js');
 
 const  Auth = require('./src/middleware/Auth.js');
+const helper = require('./src/controllers/Helper.js');
 
 dotenv.config();
 
@@ -21,7 +23,8 @@ app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
+console.log(helper.generateToken('2b6941fa-525e-45e9-88f1-582d19af6c34'));
+console.log(helper.generateToken('37f8111a-f7ce-441f-946c-c9de32dfdce8'));
 
 ////////////////////////////////////////////////
 
@@ -42,7 +45,6 @@ console.log(__dirname);
 //ROUTES//
 
 
-
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to treatment application." });
 });
@@ -54,6 +56,7 @@ app.post('/api/v1/register/staff', Auth.verifyToken, UserWithDb.registerStaff);
 app.post('/api/v1/register/patient', Auth.verifyToken, UserWithDb.registerPatient);
 app.post('/api/v1/profile/update', Auth.verifyToken, ProfileWithDb.updateMyProfile);
 app.get('/api/v1/profile/get', Auth.verifyToken, ProfileWithDb.getMyProfile);
+app.get('/api/v1/doctor/get_all_patients', Auth.verifyToken, DoctorWithDb.getAllPatients);
 
 
 app.get("*",(req,res)=>{

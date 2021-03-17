@@ -3,7 +3,6 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-
 const devConfig={
   user: process.env.PG_USER,
   password: process.env.PG_PASSWORD,
@@ -33,6 +32,10 @@ pool.on('remove', () => {
   //process.exit(0);
 });
 
+pool.on('remove', (err) => {
+  console.log('Error');
+  console.log(err);
+});
 
 module.exports = pool;
 
