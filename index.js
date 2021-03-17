@@ -23,7 +23,8 @@ app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
+console.log(helper.generateToken('2b6941fa-525e-45e9-88f1-582d19af6c34'));
+console.log(helper.generateToken('37f8111a-f7ce-441f-946c-c9de32dfdce8'));
 
 ////////////////////////////////////////////////
 
@@ -42,7 +43,6 @@ if(process.env.NODE_ENV==="production"){
 }
 console.log(__dirname);
 //ROUTES//
-
 
 
 app.get("/", (req, res) => {

@@ -93,10 +93,12 @@ CREATE TABLE IF NOT EXISTS
     date_info(
         treatment_id VARCHAR(256) NOT NULL,
         today_date DATE NOT NULL,
+        exercise_id int NOT NULL,
         marked_by_patient int DEFAULT 0,
         marked_by_relative int DEFAULT 0,
-        PRIMARY KEY (treatment_id, today_date),
-        FOREIGN KEY (treatment_id) REFERENCES treatment(treatment_id) ON DELETE CASCADE 
+        PRIMARY KEY (treatment_id, today_date, exercise_id),
+        FOREIGN KEY (treatment_id) REFERENCES treatment(treatment_id) ON DELETE CASCADE,
+        FOREIGN KEY (exercise_id) REFERENCES exercises(exercise_id) ON DELETE CASCADE
     );
 
 CREATE TABLE IF NOT EXISTS
@@ -137,4 +139,4 @@ INSERT INTO doctor(user_id, department, designation, hospital, created_date, mod
 INSERT INTO treatment(treatment_id, treatment_name, doctor_id, patient_id, treatment_start_date, treatment_end_date, staff_1) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 'knee surgery', '2b6941fa-525e-45e9-88f1-582d19af6c34', '37f8111a-f7ce-441f-946c-c9de32dfdce8', CURRENT_DATE, CURRENT_DATE + 30, '2b6941fa-525e-45e9-88f1-582d19af6c34');
 INSERT INTO daily_exercise_data(treatment_id, exercise_id) VALUES('446dead8-0161-47f1-a902-d03efbee4072',1);
 INSERT INTO questionnaire(treatment_id, week_no, question, response, threshold) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 0, 'does it hurt?', NULL, 0);
-INSERT INTO date_info(treatment_id, today_date) VALUES('446dead8-0161-47f1-a902-d03efbee4072', CURRENT_DATE);
+INSERT INTO date_info(treatment_id, exercise_id, today_date) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 1, CURRENT_DATE);
