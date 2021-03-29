@@ -80,19 +80,20 @@ const Doctor = {
     }
   },
 
-  async PatientData(req, res){ //still need to complete this, how to take patient and doctor id?
+  async getOnePatient(req, res){
     console.log(req.body)
-    const patientID = req.user.patientID;
-    const doctorID = req.user.doctorID;
+    const doctorID = req.user.id;
+    const patientID = req.body.patient_id;
     const query = 'SELECT * FROM treatment WHERE treatment.doctor_id = ($1) AND treatment.patient_id = ($2)';
-    const query2 = 'SELECT date_info.today_date, exercises.exercise_name, date_info.marked_by_patient, date_info.marked_by_relative FROM ((treatment INNER JOIN date_info WHERE treatment.treatment_id = date_info.treatment_id AND treatment.doctor_id = ($1) AND treatment.patient_id = ($2)) INNER JOIN exercises WHERE exercises.exercise_id = date_info.exercise_id AND date_info.today_date between treatment.start_date AND ($3))';
+    // const query2 = 'SELECT date_info.today_date, date_info.marked_by_patient, date_info.marked_by_relative FROM (treatment INNER JOIN date_info ON treatment.treatment_id = date_info.treatment_id AND treatment.doctor_id = ($1) AND treatment.patient_id = ($2) AND date_info.today_date BETWEEN treatment.treatment_start_date AND ($3))';
+    const query2 = 'SELECT date_info.today_date, exercises.exercise_name, date_info.marked_by_patient, date_info.marked_by_relative FROM ((treatment INNER JOIN date_info ON treatment.treatment_id = date_info.treatment_id AND treatment.doctor_id = ($1) AND treatment.patient_id = ($2) AND date_info.today_date BETWEEN treatment.treatment_start_date AND ($3)) INNER JOIN exercises ON exercises.exercise_id = date_info.exercise_id)';
     try{
-      const {rows} = await db.query(query, [doctorID, patientID]);
-      if(!rows[0]){
+      const ret = await db.query(query, [doctorID, patientID]);
+      if(!ret.rows[0]){
         return res.status(400).send('This patient does not have a treatment with this doctor');
       }
-      const {ret} = await db.query(query2, [doctorID, patientID, moment(new Date()).format(date_format)]);
-      return res.status(200).send(ret);
+      const {rows} = await db.query(query2, [doctorID, patientID, moment(new Date()).format(date_format)]);
+      return res.status(200).send(rows);
     }catch(error){
       return res.status(400).send(error);
     }

@@ -183,7 +183,7 @@ const User = {
    * @param {object} res
    * @returns {object} user object 
    */
-  async registerPatient(req, res) {
+  async registerPatient(req, res) { /*    ADD PROFILE DATA HERE */
 
     const myId = req.user.id;
 
@@ -218,6 +218,10 @@ const User = {
     }
     
   },
+  
+  /*
+  REGISTER RELATIVE HERE
+  */
 
 }
 

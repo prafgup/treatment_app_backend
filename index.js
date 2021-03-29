@@ -14,6 +14,7 @@ const DoctorWithDb = require('./src/controllers/Doctor.js');
 
 const  Auth = require('./src/middleware/Auth.js');
 const helper = require('./src/controllers/Helper.js');
+const Doctor = require("./src/controllers/Doctor.js");
 
 dotenv.config();
 
@@ -57,6 +58,9 @@ app.post('/api/v1/register/patient', Auth.verifyToken, UserWithDb.registerPatien
 app.post('/api/v1/profile/update', Auth.verifyToken, ProfileWithDb.updateMyProfile);
 app.get('/api/v1/profile/get', Auth.verifyToken, ProfileWithDb.getMyProfile);
 app.get('/api/v1/doctor/get_all_patients', Auth.verifyToken, DoctorWithDb.getAllPatients);
+app.get('/api/v1/doctor/get_one_patient', Auth.verifyToken, DoctorWithDb.getOnePatient);
+
+console.log(helper.generateToken('2b6941fa-525e-45e9-88f1-582d19af6c34'));
 
 
 app.get("*",(req,res)=>{
