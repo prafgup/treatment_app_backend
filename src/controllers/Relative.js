@@ -19,6 +19,38 @@ const Relative = {
             return res.status(400).send(error);
         }
     },
+
+    async getPatientRequests(req, res){
+        console.log(req.body);
+        const myID = req.user.id;
+        const myNumber = 'SELECT * FROM users WHERE user_id = $1';
+        const getRequests = `SELECT  
+        profile_page.first_name, 
+        profile_page.last_name,  
+        profile_page.profile_pic, 
+        patient.relative_1, 
+        patient.relative_2, 
+        patient.relative_1_status, 
+        patient.relative_2_status 
+        FROM (patient INNER JOIN profile_page ON patient.user_id = profile_page.user_id)
+        WHERE patient.relative_1=($1) OR patient.relative_2=($2)
+        `
+
+        try{
+            const user = await db.query(myNumber, [myID]);
+            if (!user.rows[0]) {
+                return res.status(400).send({'message': 'User not found'});
+            }
+
+            const patientRequests = await db.query(getRequests, [user.rows[0].mobile_number,user.rows[0].mobile_number]);
+
+            return res.status(200).send(patientRequests.rows);
+        }catch(error){
+            return res.status(400).send(error);
+        }
+    },
 }
+
+
 
 module.exports = Relative;

@@ -196,11 +196,16 @@ const User = {
     }
 
 
-    const registerPatientUser = `INSERT INTO patient(user_id, relative_1,created_date, modified_date) VALUES($1, $2, $3, $4) returning *`;
-    const patientPage = 'INSERT INTO profile_page(user_id, first_name, last_name, dob, profile_pic, home_address, email_id, created_date, modified_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)) returning *';
+    const registerPatientUser = `INSERT INTO patient(user_id, relative_1,relative_2,relative_1_status,relative_2_status,created_date, modified_date) VALUES($1, $2, $3, $4, $5, $6, $7) returning *`;
+    const patientPage = 'INSERT INTO profile_page(user_id, first_name, last_name, dob, profile_pic, home_address, email_id, created_date, modified_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) returning *';
+    const checkProfile = 'SELECT * FROM profile_page where user_id = $1'
+    
     const values = [
       myId,
       req.body.relative_1,
+      req.body.relative_2,
+      'W',
+      'W',
       moment(new Date()),
       moment(new Date())
     ];
@@ -221,10 +226,14 @@ const User = {
       if (!rows[0]) {
         return res.status(400).send({'message': 'Can not register patient'});
       }
-      const tmp = await db.query(patientPage, profilePageValues);
-      if (!tmp.rows[0]){
-        return res.status(400).send({'message': 'Can not insert patient info into profile page'});
+
+      const check = await db.query(checkProfile, [myId]); // check profile exists
+      if (!check.rows[0]){
+        await db.query(patientPage, profilePageValues);
       }
+
+
+
       return res.status(200).send({'message': 'Patient Registered','curr' : rows[0]});
 
     } catch(error) {
