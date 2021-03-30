@@ -57,7 +57,7 @@ const User = {
     const checkDoctor = 'SELECT * FROM doctor WHERE user_id = $1';
     const checkPatient = 'SELECT * FROM patient WHERE user_id = $1';
     const checkStaff = 'SELECT * FROM staff WHERE user_id = $1';
-    const checkRelative = 'SELECT * FROM relative WHERE user_id = $1';
+    const checkRelative = 'SELECT * FROM relative_table WHERE user_id = $1';
     try {
       const { rows } = await db.query(text, [req.body.mobile_number]);
       console.log("kasjdfksjf");
@@ -197,9 +197,21 @@ const User = {
 
 
     const registerPatientUser = `INSERT INTO patient(user_id, relative_1,created_date, modified_date) VALUES($1, $2, $3, $4) returning *`;
+    const patientPage = 'INSERT INTO profile_page(user_id, first_name, last_name, dob, profile_pic, home_address, email_id, created_date, modified_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)) returning *';
     const values = [
       myId,
       req.body.relative_1,
+      moment(new Date()),
+      moment(new Date())
+    ];
+    const profilePageValues = [
+      myId,
+      req.body.first_name, 
+      req.body.last_name,
+      req.body.dob, 
+      req.body.profile_pic,
+      req.body.home_address,
+      req.body.email_id,
       moment(new Date()),
       moment(new Date())
     ];
@@ -209,7 +221,10 @@ const User = {
       if (!rows[0]) {
         return res.status(400).send({'message': 'Can not register patient'});
       }
-
+      const tmp = await db.query(patientPage, profilePageValues);
+      if (!tmp.rows[0]){
+        return res.status(400).send({'message': 'Can not insert patient info into profile page'});
+      }
       return res.status(200).send({'message': 'Patient Registered','curr' : rows[0]});
 
     } catch(error) {
@@ -222,7 +237,30 @@ const User = {
   /*
   REGISTER RELATIVE HERE
   */
+  async registerRelative(req, res){
+    const myId = req.user.id;
 
+    if (!Helper.isValidMobile(req.body.mobile_number)) {
+      return res.status(400).send({ 'message': 'Please enter a valid mobile number' });
+    }
+
+    const registerRelativeUser = `INSERT INTO relative_table(user_id, mobile_number, created_date, modified_date) VALUES($1, $2, $3, $4) returning *`;
+    const values = [
+      myId,
+      req.body.mobile_number,
+      moment(new Date()),
+      moment(new Date())
+    ];
+    try{
+      const {rows} = await db.query(registerRelativeUser, values);
+      if(!rows[0]){
+        return res.status(400).send({'message': 'Cannot register relative'});
+      }
+      return res.status(200).send({'message':'Relative registered', 'cur':rows[0]});
+    }catch(error){
+      return res.status(400).send(error);
+    }
+  }
 }
 
 

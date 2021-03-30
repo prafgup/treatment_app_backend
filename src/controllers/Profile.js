@@ -23,8 +23,8 @@ const Profile = {
     const myId = req.user.id;
 
     const getMyProfile = 'SELECT * FROM profile_page where user_id = $1';
-    const createProfile = `INSERT INTO profile_page(user_id, first_name,last_name, dob,home_address,email_id,created_date,modified_date) VALUES($1, $2, $3, $4,$5, $6, $7, $8) returning *`;
-    const updateProfile = `UPDATE profile_page SET first_name = ($1), last_name = ($2), dob = ($3), home_address = ($4), email_id = ($5), modified_date = ($6) WHERE user_id = ($7) returning *`;
+    const createProfile = `INSERT INTO profile_page(user_id, first_name,last_name, dob,profile_pic, home_address,email_id,created_date,modified_date) VALUES($1, $2, $3, $4,$5, $6, $7, $8, $9) returning *`;
+    const updateProfile = `UPDATE profile_page SET first_name = ($1), last_name = ($2), dob = ($3), profile_pic = ($4), home_address = ($5), email_id = ($6), modified_date = ($7) WHERE user_id = ($8) returning *`;
     try {
       const { rows } = await db.query(getMyProfile, [myId]);
 
@@ -37,6 +37,7 @@ const Profile = {
             req.body.first_name,
             req.body.last_name,
             req.body.dob,
+            req.body.profile_pic,
             req.body.home_address,
             req.body.email_id,
             moment(new Date()),
@@ -50,6 +51,7 @@ const Profile = {
             req.body.first_name,
             req.body.last_name,
             req.body.dob,
+            req.body.profile_pic,
             req.body.home_address,
             req.body.email_id,
             moment(new Date()),

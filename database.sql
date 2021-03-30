@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS questionnaire;
 DROP TABLE IF EXISTS treatment;
 DROP TABLE IF EXISTS exercises;
 DROP TABLE IF EXISTS staff;
+DROP TABLE IF EXISTS relative_table;
 DROP TABLE IF EXISTS doctor;
 DROP TABLE IF EXISTS patient;
 DROP TABLE IF EXISTS profile_page;
@@ -52,6 +53,15 @@ CREATE TABLE IF NOT EXISTS
         FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
     );
 
+CREATE TABLE IF NOT EXISTS 
+    relative_table(
+        user_id VARCHAR(256) PRIMARY KEY,
+        mobile_number VARCHAR(256),
+        created_date TIMESTAMP, 
+        modified_date TIMESTAMP,
+        FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE
+    );
+
 CREATE TABLE IF NOT EXISTS
     staff(
         user_id VARCHAR(256) PRIMARY KEY,
@@ -72,7 +82,7 @@ CREATE TABLE IF NOT EXISTS
         treatment_start_date DATE NOT NULL,
         treatment_end_date DATE,
         treatment_day int DEFAULT 0,
-        staff_1 VARCHAR(256) NOT NULL,
+        staff_1 VARCHAR(256),
         staff_2 VARCHAR(256),
         FOREIGN KEY (doctor_id) REFERENCES doctor(user_id) ON DELETE CASCADE,
         FOREIGN KEY (patient_id) REFERENCES patient(user_id) ON DELETE CASCADE,
@@ -120,10 +130,11 @@ INSERT INTO users(user_id, mobile_number, created_date, modified_date) VALUES('e
 INSERT INTO staff(user_id, department, designation, hospital, created_date, modified_date) VALUES('ed7e013d-4401-4543-9ca8-ecfe95bb020a','Ortho', 'anaesthesia', 'B', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO users(user_id, mobile_number, created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce8',8734928347,CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO patient(user_id, relative_1, created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce8','relative 1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO patient(user_id, relative_1, created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce8','0f8ec339-c38b-4832-b10d-b8f288fe0100', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO profile_page(user_id, first_name, last_name, dob, home_address, email_id, created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce8','F', 'L', '1-10-2010','Ghar ka address', 'fl@asdfkj.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 -- add question details here, as they wont be changed later
-
+INSERT INTO users(user_id, mobile_number, created_date, modified_date) VALUES('0f8ec339-c38b-4832-b10d-b8f288fe0100', 0123445678, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO relative_table(user_id, mobile_number, created_date, modified_date) VALUES('0f8ec339-c38b-4832-b10d-b8f288fe0100', 0123445678, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO staff(user_id, department, designation, hospital, created_date, modified_date) VALUES('2b6941fa-525e-45e9-88f1-582d19af6c34', 'a1', 'a2', 'a3', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO exercises(exercise_rep, exercise_name, instructions) VALUES(10, 'push up', 'just use your hands');

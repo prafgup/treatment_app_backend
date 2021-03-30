@@ -11,10 +11,10 @@ const dotenv = require('dotenv');
 const  UserWithDb = require('./src/controllers/User.js');
 const  ProfileWithDb = require('./src/controllers/Profile.js');
 const DoctorWithDb = require('./src/controllers/Doctor.js');
-
+const PatientWithDb = require('./src/controllers/Patient.js');
+const RelativewithDb = require('./src/controllers/Relative.js');
 const  Auth = require('./src/middleware/Auth.js');
 const helper = require('./src/controllers/Helper.js');
-const Doctor = require("./src/controllers/Doctor.js");
 
 dotenv.config();
 
@@ -23,9 +23,6 @@ app.use(bodyParser.json());
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
-
-console.log(helper.generateToken('2b6941fa-525e-45e9-88f1-582d19af6c34'));
-console.log(helper.generateToken('37f8111a-f7ce-441f-946c-c9de32dfdce8'));
 
 ////////////////////////////////////////////////
 
@@ -55,13 +52,16 @@ app.post('/api/v1/users/login',UserWithDb.login);  // mobile_number , auth_token
 app.post('/api/v1/register/doctor', Auth.verifyToken, UserWithDb.registerDoctor);
 app.post('/api/v1/register/staff', Auth.verifyToken, UserWithDb.registerStaff);
 app.post('/api/v1/register/patient', Auth.verifyToken, UserWithDb.registerPatient);
+app.post('/api/v1/register/patient', Auth.verifyToken, UserWithDb.registerRelative);
 app.post('/api/v1/profile/update', Auth.verifyToken, ProfileWithDb.updateMyProfile);
 app.get('/api/v1/profile/get', Auth.verifyToken, ProfileWithDb.getMyProfile);
 app.get('/api/v1/doctor/get_all_patients', Auth.verifyToken, DoctorWithDb.getAllPatients);
 app.get('/api/v1/doctor/get_one_patient', Auth.verifyToken, DoctorWithDb.getOnePatient);
-
-console.log(helper.generateToken('2b6941fa-525e-45e9-88f1-582d19af6c34'));
-
+app.get('/api/v1/patient/get_treatment_data',Auth.verifyToken, PatientWithDb.getExerciseData);
+app.get('/api/v1/patient/get_request_status', Auth.verifyToken, PatientWithDb.getRequestStatus);
+app.get('/api/v1/relative/getRequests', Auth.verifyToken, RelativewithDb.getRequests);
+// console.log(helper.generateToken('2b6941fa-525e-45e9-88f1-582d19af6c34'));
+console.log(helper.generateToken('0f8ec339-c38b-4832-b10d-b8f288fe0100'));
 
 app.get("*",(req,res)=>{
   if(process.env.NODE_ENV==="production"){
