@@ -33,9 +33,13 @@ const Relative = {
         profile_page.first_name, 
         profile_page.last_name,  
         profile_page.profile_pic,
-        patient.user_id
+        patient.user_id,
+        patient.relative_1, 
+        patient.relative_2, 
+        patient.relative_1_status, 
+        patient.relative_2_status 
         FROM (patient INNER JOIN profile_page ON patient.user_id = profile_page.user_id)
-        WHERE (patient.relative_1=($1) AND patient.relative_1_status = 'W') OR (patient.relative_2=($2) AND patient.relative_2_status = 'W')
+        WHERE (patient.relative_1=($1)) OR (patient.relative_2=($2))
         `;
 
         try{
