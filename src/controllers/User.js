@@ -60,7 +60,7 @@ const User = {
     const checkRelative = 'SELECT * FROM relative_table WHERE user_id = $1';
     try {
       const { rows } = await db.query(text, [req.body.mobile_number]);
-      console.log("kasjdfksjf");
+      // console.log("kasjdfksjf");
       console.log(rows)
       if (!rows[0]) {
         console.log('first time on app')
