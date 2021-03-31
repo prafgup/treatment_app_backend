@@ -80,6 +80,33 @@ const Patient = {
     }catch(error){
         return res.status(400).send(error);
     }
+  },
+
+  async updateExerciseStatus(req, res){
+    const myID = req.user.id;
+    const cur_date = moment(new Date()).format(date_format);
+    const treatmentQuery = 'SELECT * FROM treatment WHERE treatment_start_date <= ($1) AND treatment_end_date >= ($2) AND patient_id = ($3)';
+    const query = 'UPDATE date_info SET marked_by_patient = ($1) WHERE treatment_id = ($2) AND today_date = ($3)';
+    const val1 = [
+      cur_date,
+      cur_date,
+      myID
+    ];
+    try{
+      const users = await db.query(treatmentQuery, val1);
+      if(!users.rows[0]){
+        return res.status(400).send({'message':'Cannot find treatment'});
+      }
+      const values = [
+        1,
+        users.rows[0].treatment_id,
+        cur_date
+      ];
+      const ret = await db.query(query, values);
+      return res.status(200).send(ret.rows);
+    }catch(error){
+      return res.status(400).send(error);
+    }
   }
 
 }

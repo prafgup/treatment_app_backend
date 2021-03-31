@@ -136,7 +136,7 @@ INSERT INTO users(user_id, mobile_number, created_date, modified_date) VALUES('3
 INSERT INTO users(user_id, mobile_number, created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce9',1234567811,CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO users(user_id, mobile_number, created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce0',1234567822,CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO users(user_id, mobile_number, created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce1',1234567833,CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO patient(user_id, relative_1,relative_2,relative_1_status,relative_2_status,created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce8','9999999999','8750565754','W','W', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO patient(user_id, relative_1,relative_2,relative_1_status,relative_2_status,created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce8','9123445678','8750565754','W','W', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO patient(user_id, relative_1,relative_2,relative_1_status,relative_2_status,created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce9','9999999999','8750565754','A','W', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO patient(user_id, relative_1,relative_2,relative_1_status,relative_2_status,created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce0','8750565754','9999999999','W','A', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO patient(user_id, relative_1,relative_2,relative_1_status,relative_2_status,created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce1','8750565754','9999999999','W','R', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
@@ -146,8 +146,8 @@ INSERT INTO profile_page(user_id, first_name, last_name, dob, home_address, emai
 INSERT INTO profile_page(user_id, first_name, last_name, dob, home_address, email_id, created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce0','F', 'L', '1-10-2010','Ghar ka address', 'fl@asdfkj.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO profile_page(user_id, first_name, last_name, dob, home_address, email_id, created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce1','F', 'L', '1-10-2010','Ghar ka address', 'fl@asdfkj.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 -- add question details here, as they wont be changed later
-INSERT INTO users(user_id, mobile_number, created_date, modified_date) VALUES('0f8ec339-c38b-4832-b10d-b8f288fe0100', 0123445678, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO relative_table(user_id, mobile_number, created_date, modified_date) VALUES('0f8ec339-c38b-4832-b10d-b8f288fe0100', 0123445678, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO users(user_id, mobile_number, created_date, modified_date) VALUES('0f8ec339-c38b-4832-b10d-b8f288fe0100', 9123445678, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO relative_table(user_id, mobile_number, created_date, modified_date) VALUES('0f8ec339-c38b-4832-b10d-b8f288fe0100', 9123445678, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO staff(user_id, department, designation, hospital, created_date, modified_date) VALUES('2b6941fa-525e-45e9-88f1-582d19af6c34', 'a1', 'a2', 'a3', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO exercises(exercise_rep, exercise_name, instructions) VALUES(10, 'push up', 'just use your hands');
@@ -159,5 +159,5 @@ INSERT INTO treatment(treatment_id, treatment_name, doctor_id, patient_id, treat
 INSERT INTO questionnaire(treatment_id, week_no, question, response, threshold) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 0, 'does it hurt?', NULL, 0);
 INSERT INTO date_info(treatment_id, exercise_id, today_date) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 1, CURRENT_DATE);
 
--- SELECT * FROM treatment;
-SELECT * FROM patient;
+SELECT * FROM treatment;
+-- SELECT * FROM patient;

@@ -10,9 +10,14 @@ const Relative = {
         console.log(req.body);
         const myID = req.user.id;
         const cur_date = moment(new Date()).format(date_format);
-        const query = 'SELECT profile_page.first_name, profile_page.last_name, date_info.today_date, exercises.exercise_name FROM ((((date_info INNER JOIN treatment ON treatment.treatment_id = date_info.treatment_id AND date_info.marked_by_patient = 1 AND date_info.marked_by_relative = 0 AND treatment.treatment_end_date >= ($1)) INNER JOIN profile_page ON profile_page.user_id = treatment.patient_id) INNER JOIN patient ON patient.user_id = treatment.patient_id AND patient.relative_1 = ($2)) INNER JOIN exercises ON exercises.exercise_id = date_info.exercise_id)';
+        const myNumber = 'SELECT * FROM users WHERE user_id = $1';
+        const query = 'SELECT profile_page.first_name, profile_page.last_name, date_info.today_date, exercises.exercise_name, treatment.patient_id, date_info.exercise_id FROM ((((date_info INNER JOIN treatment ON treatment.treatment_id = date_info.treatment_id AND date_info.marked_by_patient = 1 AND date_info.marked_by_relative = 0 AND treatment.treatment_end_date >= ($1)) INNER JOIN profile_page ON profile_page.user_id = treatment.patient_id) INNER JOIN patient ON patient.user_id = treatment.patient_id AND (patient.relative_1 = ($2) OR patient.relative_2 = ($3))) INNER JOIN exercises ON exercises.exercise_id = date_info.exercise_id)';
         try{
-            const {rows} = await db.query(query, [cur_date, myID]);
+            const user = await db.query(myNumber, [myID]);
+            if (!user.rows[0]) {
+                return res.status(400).send({'message': 'User not found'});
+            }
+            const {rows} = await db.query(query, [cur_date, user.rows[0].mobile_number, user.rows[0].mobile_number]);
             // console.log(rows);
             return res.status(200).send(rows);
         }catch(error){
@@ -27,21 +32,18 @@ const Relative = {
         const getRequests = `SELECT  
         profile_page.first_name, 
         profile_page.last_name,  
-        profile_page.profile_pic, 
-        patient.relative_1, 
-        patient.relative_2, 
-        patient.relative_1_status, 
-        patient.relative_2_status 
+        profile_page.profile_pic,
+        patient.user_id
         FROM (patient INNER JOIN profile_page ON patient.user_id = profile_page.user_id)
-        WHERE patient.relative_1=($1) OR patient.relative_2=($2)
-        `
+        WHERE (patient.relative_1=($1) AND patient.relative_1_status = 'W') OR (patient.relative_2=($2) AND patient.relative_2_status = 'W')
+        `;
 
         try{
             const user = await db.query(myNumber, [myID]);
             if (!user.rows[0]) {
                 return res.status(400).send({'message': 'User not found'});
             }
-
+            console.log([user.rows[0].mobile_number, myID]);
             const patientRequests = await db.query(getRequests, [user.rows[0].mobile_number,user.rows[0].mobile_number]);
 
             return res.status(200).send(patientRequests.rows);
@@ -49,6 +51,65 @@ const Relative = {
             return res.status(400).send(error);
         }
     },
+
+    async updateFriendRequests(req, res){// update incoming relative requests
+        const myID = req.user.id;
+        const patientID = req.body.user_id;
+        const accept_status = req.body.status;
+        const mobileQuery = 'SELECT * FROM users WHERE user_id = ($1)';
+        const query1 = 'UPDATE patient SET relative_1_status = ($1) WHERE relative_1 = ($2)';
+        const query2 = 'UPDATE patient SET relative_2_status = ($1) WHERE relative_2 = ($2)';
+        const values = [
+           myID 
+        ];
+        try{
+            const users = await db.query(mobileQuery, values);
+            if(!users.rows[0]){
+                return res.status(400).send({'message':'User not registered'});
+            }
+            const mobile_number = users.rows[0].mobile_number;
+            const val = [
+                accept_status,
+                mobile_number
+            ];
+            const r1 = await db.query(query1, val);
+            const r2 = await db.query(query2, val);
+            return res.status(200).send({'message':'updated requests'});
+        }catch(error){
+            return res.status(400).send(error);
+        }
+    },
+
+    async updateExerciseRequest(req, res){// update patient exercise requests
+        console.log(req.body);
+        const query = 'UPDATE date_info SET marked_by_relative = ($1) WHERE date_info.today_date = ($2) AND date_info.exercise_id = ($3) AND date_info.treatment_id = ($4)';
+        const getTreatment = 'SELECT * FROM treatment WHERE treatment.patient_id = ($1) AND treatment.treatment_start_date <= ($2) AND treatment.treatment_end_date >= ($3)';
+        // const debug = 'SELECT * FROM date_info WHERE marked_by_relative = 1';
+        const values1 = [
+            req.body.patient_id,
+            req.body.today_date,
+            req.body.today_date
+        ];
+        try{
+            const user = await db.query(getTreatment, values1);
+            if(!user.rows[0]){
+                return res.status(400).send({'message':'Cannot update exercise status'});
+            }
+            const treatmentID = user.rows[0].treatment_id;
+            const values2 = [
+                req.body.exercise_status,
+                req.body.today_date,
+                req.body.exercise_id,
+                treatmentID
+            ];
+            const {rows} = await db.query(query, values2);
+            // const tmp = await db.query(debug);
+            // console.log(tmp.rows[0]);
+            return res.status(200).send(rows);
+        }catch(error){
+            return res.status(400).send(error);
+        }
+    }
 }
 
 
