@@ -32,21 +32,27 @@ const Relative = {
         const getRequests = `SELECT  
         profile_page.first_name, 
         profile_page.last_name,  
-        profile_page.profile_pic,
-        patient.user_id
+        profile_page.profile_pic, 
+        patient.relative_1, 
+        patient.relative_2, 
+        patient.relative_1_status, 
+        patient.relative_2_status 
         FROM (patient INNER JOIN profile_page ON patient.user_id = profile_page.user_id)
-        WHERE (patient.relative_1=($1) AND patient.relative_1_status = 'W') OR (patient.relative_2=($2) AND patient.relative_2_status = 'W')
-        `;
+        WHERE patient.relative_1=($1) OR patient.relative_2=($2)
+        `
 
         try{
             const user = await db.query(myNumber, [myID]);
             if (!user.rows[0]) {
                 return res.status(400).send({'message': 'User not found'});
             }
-            console.log([user.rows[0].mobile_number, myID]);
+
             const patientRequests = await db.query(getRequests, [user.rows[0].mobile_number,user.rows[0].mobile_number]);
 
-            return res.status(200).send(patientRequests.rows);
+            return res.status(200).send({
+                myNumber : user.rows[0].mobile_number,
+                patients: patientRequests.rows
+            });
         }catch(error){
             return res.status(400).send(error);
         }
