@@ -33,6 +33,7 @@ const Relative = {
         profile_page.first_name, 
         profile_page.last_name,  
         profile_page.profile_pic, 
+        patient.user_id,
         patient.relative_1, 
         patient.relative_2, 
         patient.relative_1_status, 
@@ -63,8 +64,8 @@ const Relative = {
         const patientID = req.body.user_id;
         const accept_status = req.body.status;
         const mobileQuery = 'SELECT * FROM users WHERE user_id = ($1)';
-        const query1 = 'UPDATE patient SET relative_1_status = ($1) WHERE relative_1 = ($2)';
-        const query2 = 'UPDATE patient SET relative_2_status = ($1) WHERE relative_2 = ($2)';
+        const query1 = 'UPDATE patient SET relative_1_status = ($1) WHERE relative_1 = ($2) AND user_id = ($3)';
+        const query2 = 'UPDATE patient SET relative_2_status = ($1) WHERE relative_2 = ($2) AND user_id = ($3)';
         const values = [
            myID 
         ];
@@ -76,7 +77,8 @@ const Relative = {
             const mobile_number = users.rows[0].mobile_number;
             const val = [
                 accept_status,
-                mobile_number
+                mobile_number,
+                patientID
             ];
             const r1 = await db.query(query1, val);
             const r2 = await db.query(query2, val);
