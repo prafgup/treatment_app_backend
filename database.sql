@@ -100,7 +100,8 @@ CREATE TABLE IF NOT EXISTS
         exercise_name VARCHAR(128) NOT NULL,
         instructions VARCHAR(500) NOT NULL,
         exercise_video_url VARCHAR(128),
-        exercise_img_url VARCHAR(128)
+        exercise_img_url VARCHAR(128),
+        duration int 
     );
 
 CREATE TABLE IF NOT EXISTS
@@ -151,10 +152,10 @@ INSERT INTO users(user_id, mobile_number, created_date, modified_date) VALUES('0
 INSERT INTO relative_table(user_id, mobile_number, created_date, modified_date) VALUES('0f8ec339-c38b-4832-b10d-b8f288fe0100', 999999999, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO staff(user_id, department, designation, hospital, created_date, modified_date) VALUES('2b6941fa-525e-45e9-88f1-582d19af6c34', 'a1', 'a2', 'a3', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-INSERT INTO exercises(exercise_rep, exercise_name, instructions) VALUES(10, 'push up', 'just use your hands');
-INSERT INTO exercises(exercise_rep, exercise_name, instructions) VALUES(10, 'pull up', 'just use your hands');
-INSERT INTO exercises(exercise_rep, exercise_name, instructions) VALUES(10, 'walking', 'just use your hands');
-INSERT INTO exercises(exercise_rep, exercise_name, instructions) VALUES(10, 'swimming', 'just use your hands');
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(10, 'push up', 'just use your hands', 2);
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(10, 'pull up', 'just use your hands', 4);
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(10, 'walking', 'just use your hands', 6);
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(10, 'swimming', 'just use your hands', 8);
 
 INSERT INTO users(user_id, mobile_number, created_date, modified_date) VALUES('2466d759-d15d-4882-8d2b-20f7139fa26a',1234567899, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO doctor(user_id, department, designation, hospital, created_date, modified_date) VALUES('2466d759-d15d-4882-8d2b-20f7139fa26a','Ortho', 'Surgeon', 'B',CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
