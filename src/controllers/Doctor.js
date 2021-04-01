@@ -70,9 +70,9 @@ const Doctor = {
   async getAllPatients(req, res){
     console.log(req.body)
     const myId = req.user.id;
-    const getPatientData = 'SELECT profile_page.first_name, profile_page.last_name, profile_page.profile_pic, treatment.treatment_name, treatment.treatment_day, exercises.exercise_name, date_info.marked_by_patient, questionnaire.question, questionnaire.response FROM ((((treatment INNER JOIN profile_page ON treatment.patient_id = profile_page.user_id AND treatment.doctor_id = ($1)) INNER JOIN questionnaire ON questionnaire.treatment_id = treatment.treatment_id AND questionnaire.week_no = treatment.treatment_day/7) INNER JOIN date_info ON date_info.treatment_id = treatment.treatment_id AND date_info.today_date = ($2)) INNER JOIN exercises ON date_info.exercise_id = exercises.exercise_id)';
+    const getPatientData = 'SELECT profile_page.first_name, profile_page.last_name, profile_page.profile_pic, treatment.treatment_name, treatment.treatment_day, exercises.exercise_name, date_info.marked_by_patient, questionnaire.question, questionnaire.response FROM ((((treatment INNER JOIN profile_page ON treatment.patient_id = profile_page.user_id AND treatment.doctor_id = ($1)) INNER JOIN questionnaire ON questionnaire.treatment_id = treatment.treatment_id AND questionnaire.day_no = treatment.treatment_day) INNER JOIN date_info ON date_info.treatment_id = treatment.treatment_id AND date_info.today_day = treatment.treatment_day) INNER JOIN exercises ON date_info.exercise_id = exercises.exercise_id)';
     try{
-        const { rows } = await db.query(getPatientData, [myId,moment(new Date()).format(date_format)]);
+        const { rows } = await db.query(getPatientData, [myId]);
         return res.status(200).send(rows);
     }
     catch(error){
@@ -86,13 +86,13 @@ const Doctor = {
     const patientID = req.body.patient_id;
     const query = 'SELECT * FROM treatment WHERE treatment.doctor_id = ($1) AND treatment.patient_id = ($2)';
     // const query2 = 'SELECT date_info.today_date, date_info.marked_by_patient, date_info.marked_by_relative FROM (treatment INNER JOIN date_info ON treatment.treatment_id = date_info.treatment_id AND treatment.doctor_id = ($1) AND treatment.patient_id = ($2) AND date_info.today_date BETWEEN treatment.treatment_start_date AND ($3))';
-    const query2 = 'SELECT date_info.today_date, exercises.exercise_name, date_info.marked_by_patient, date_info.marked_by_relative FROM ((treatment INNER JOIN date_info ON treatment.treatment_id = date_info.treatment_id AND treatment.doctor_id = ($1) AND treatment.patient_id = ($2) AND date_info.today_date BETWEEN treatment.treatment_start_date AND ($3)) INNER JOIN exercises ON exercises.exercise_id = date_info.exercise_id)';
+    const query2 = 'SELECT date_info.today_day, exercises.exercise_name, date_info.marked_by_patient, date_info.marked_by_relative FROM ((treatment INNER JOIN date_info ON treatment.treatment_id = date_info.treatment_id AND treatment.doctor_id = ($1) AND treatment.patient_id = ($2) AND date_info.today_day <= treatment.treatment_day) INNER JOIN exercises ON exercises.exercise_id = date_info.exercise_id)';
     try{
       const ret = await db.query(query, [doctorID, patientID]);
       if(!ret.rows[0]){
         return res.status(400).send('This patient does not have a treatment with this doctor');
       }
-      const {rows} = await db.query(query2, [doctorID, patientID, moment(new Date()).format(date_format)]);
+      const {rows} = await db.query(query2, [doctorID, patientID]);
       return res.status(200).send(rows);
     }catch(error){
       return res.status(400).send(error);
