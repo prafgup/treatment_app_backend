@@ -70,10 +70,47 @@ const Doctor = {
   async getAllPatients(req, res){
     console.log(req.body)
     const myId = req.user.id;
-    const getPatientData = 'SELECT users.mobile_number, profile_page.first_name, profile_page.last_name, profile_page.profile_pic, treatment.treatment_name, treatment.treatment_day, exercises.exercise_name, date_info.marked_by_patient, questionnaire.question, questionnaire.response FROM (((((treatment INNER JOIN profile_page ON treatment.patient_id = profile_page.user_id AND treatment.doctor_id = ($1)) INNER JOIN questionnaire ON questionnaire.treatment_id = treatment.treatment_id AND questionnaire.day_no = treatment.treatment_day) INNER JOIN date_info ON date_info.treatment_id = treatment.treatment_id AND date_info.today_day = treatment.treatment_day) INNER JOIN exercises ON date_info.exercise_id = exercises.exercise_id) INNER JOIN users ON users.user_id = treatment.patient_id)';
+    const getPatientData = 'SELECT users.mobile_number, profile_page.first_name, profile_page.last_name, profile_page.profile_pic, treatment.treatment_name, treatment.treatment_day, exercises.exercise_name, date_info.marked_by_patient, date_info.marked_by_relative FROM (((((treatment INNER JOIN profile_page ON treatment.patient_id = profile_page.user_id AND treatment.doctor_id = ($1)) INNER JOIN questionnaire ON questionnaire.treatment_id = treatment.treatment_id AND questionnaire.day_no = treatment.treatment_day) INNER JOIN date_info ON date_info.treatment_id = treatment.treatment_id AND date_info.today_day = treatment.treatment_day) INNER JOIN exercises ON date_info.exercise_id = exercises.exercise_id) INNER JOIN users ON users.user_id = treatment.patient_id)';
     try{
         const { rows } = await db.query(getPatientData, [myId]);
-        return res.status(200).send(rows);
+        var arr = [];
+        var i = 0;
+        var n = Object.keys(rows).length;
+        // console.log(n);
+        var sorted = [];
+        while(i<n){
+          sorted.push([rows[i].mobile_number, rows[i].first_name, rows[i].last_name, rows[i].profile_pic, rows[i].treatment_name, rows[i].treatment_day, rows[i].marked_by_patient, rows[i].marked_by_relative]);
+          i++;
+        }
+        // console.log(sorted);
+        sorted.sort(function(a, b){
+          return a[0]<b[0];
+        });
+        i = 0;
+        while(i<n){
+          var tmp = i;
+          var patient_cnt = 0;
+          var relative_cnt = 0;
+          var number = sorted[i][0];
+          while(tmp<n && sorted[tmp][0] == number){
+            patient_cnt += sorted[tmp][6];
+            if(sorted[tmp][7] > 0){
+              relative_cnt += 1;
+            }
+            tmp++;
+          }
+          tmp--;
+          if(relative_cnt != patient_cnt){
+            relative_cnt = 0;
+          }
+          if(patient_cnt > 0){
+            patient_cnt = 1;
+          }
+          arr.push([sorted[i][0], sorted[i][1], sorted[i][2], sorted[i][3], sorted[i][4], sorted[i][5], patient_cnt, relative_cnt]);
+          i = tmp+1;
+        }
+        console.log(arr);
+        return res.status(200).send(arr);
     }
     catch(error){
         return res.status(400).send(error);
