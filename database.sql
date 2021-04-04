@@ -120,6 +120,7 @@ CREATE TABLE IF NOT EXISTS
 CREATE TABLE IF NOT EXISTS
     questionnaire(
         treatment_id VARCHAR(256) NOT NULL,
+        question_no int,
         day_no int DEFAULT 0,
         question VARCHAR(256) NOT NULL,
         response int,
@@ -156,16 +157,48 @@ INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUE
 INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(10, 'pull up', 'just use your hands', 4);
 INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(10, 'walking', 'just use your hands', 6);
 INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(10, 'swimming', 'just use your hands', 8);
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(25, 'ankle toe movement', 'N/A', 10);
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(10, 'isometric quads ', 'N/A', 4);
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(10, 'straight leg raise (supine)', 'N/A', 5);
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(10, 'straight leg raise (side-lying)', 'N/A', 10);
 
 INSERT INTO users(user_id, mobile_number, created_date, modified_date) VALUES('2466d759-d15d-4882-8d2b-20f7139fa26a',1234567899, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO doctor(user_id, department, designation, hospital, created_date, modified_date) VALUES('2466d759-d15d-4882-8d2b-20f7139fa26a','Ortho', 'Surgeon', 'B',CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO treatment(treatment_id, treatment_name, doctor_id, patient_id, treatment_start_date, treatment_end_date, staff_1) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 'knee surgery', '2b6941fa-525e-45e9-88f1-582d19af6c34', '37f8111a-f7ce-441f-946c-c9de32dfdce8', CURRENT_DATE, CURRENT_DATE + 30, '2b6941fa-525e-45e9-88f1-582d19af6c34');
 
-INSERT INTO questionnaire(treatment_id, day_no, question, response, threshold) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 1, 'does it hurt?', NULL, 0);
 INSERT INTO date_info(treatment_id, exercise_id, today_day, today_date) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 1, 1, CURRENT_DATE);
 INSERT INTO date_info(treatment_id, exercise_id, today_day, marked_by_patient, today_date) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 3, 1, 1, CURRENT_DATE);
-INSERT INTO date_info(treatment_id, exercise_id, today_day, marked_by_patient, today_date) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 2, 2, 1, CURRENT_DATE);
-INSERT INTO date_info(treatment_id, exercise_id, today_day, today_date) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 4, 2, CURRENT_DATE);
+INSERT INTO date_info(treatment_id, exercise_id, today_day, marked_by_patient, today_date) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 2, 2, 1, CURRENT_DATE+1);
+INSERT INTO date_info(treatment_id, exercise_id, today_day, today_date) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 4, 2, CURRENT_DATE+1);
+INSERT INTO date_info(treatment_id, exercise_id, today_day, today_date) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 5, 3, CURRENT_DATE+2);
+INSERT INTO date_info(treatment_id, exercise_id, today_day, today_date) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 6, 3, CURRENT_DATE+2);
+INSERT INTO date_info(treatment_id, exercise_id, today_day, today_date) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 7, 3, CURRENT_DATE+2);
+INSERT INTO date_info(treatment_id, exercise_id, today_day, today_date) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 8, 4, CURRENT_DATE+3);
+
+INSERT INTO questionnaire(treatment_id, day_no, question_no, question, response, threshold) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 1, 1, 'Unable to do the exercises as mentioned.', NULL, 0);
+INSERT INTO questionnaire(treatment_id, day_no, question_no, question, response, threshold) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 1, 2, 'Unable to hold the desired position as mentioned for the desired time.', NULL, 0);
+INSERT INTO questionnaire(treatment_id, day_no, question_no, question, response, threshold) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 1, 3, 'Balance problem while performing  exercise 1-4.', NULL, 0);
+INSERT INTO questionnaire(treatment_id, day_no, question_no, question, response, threshold) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 1, 4, 'Difficulty in progressing further to increased holding time while doing exercise.', NULL, 0);
+INSERT INTO questionnaire(treatment_id, day_no, question_no, question, response, threshold) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 1, 5, 'Pain and/or stiffness in the knees.', NULL, 0);
+
+
+INSERT INTO questionnaire(treatment_id, day_no, question_no, question, response, threshold) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 2, 1, 'Unable to do the exercises as mentioned.', NULL, 0);
+INSERT INTO questionnaire(treatment_id, day_no, question_no, question, response, threshold) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 2, 2, 'Unable to hold the desired position as mentioned for the desired time.', NULL, 0);
+INSERT INTO questionnaire(treatment_id, day_no, question_no, question, response, threshold) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 2, 3, 'Balance problem while performing  exercise 1-4.', NULL, 0);
+INSERT INTO questionnaire(treatment_id, day_no, question_no, question, response, threshold) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 2, 4, 'Difficulty in progressing further to increased holding time while doing exercise.', NULL, 0);
+INSERT INTO questionnaire(treatment_id, day_no, question_no, question, response, threshold) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 2, 5, 'Pain and/or stiffness in the knees.', NULL, 0);
+
+INSERT INTO questionnaire(treatment_id, day_no, question_no, question, response, threshold) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 3, 1, 'Unable to do the exercises as mentioned.', NULL, 0);
+INSERT INTO questionnaire(treatment_id, day_no, question_no, question, response, threshold) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 3, 2, 'Unable to hold the desired position as mentioned for the desired time.', NULL, 0);
+INSERT INTO questionnaire(treatment_id, day_no, question_no, question, response, threshold) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 3, 3, 'Balance problem while performing  exercise 1-4.', NULL, 0);
+INSERT INTO questionnaire(treatment_id, day_no, question_no, question, response, threshold) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 3, 4, 'Difficulty in progressing further to increased holding time while doing exercise.', NULL, 0);
+INSERT INTO questionnaire(treatment_id, day_no, question_no, question, response, threshold) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 3, 5, 'Pain and/or stiffness in the knees.', NULL, 0);
+
+INSERT INTO questionnaire(treatment_id, day_no, question_no, question, response, threshold) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 4, 1, 'Unable to do the exercises as mentioned.', NULL, 0);
+INSERT INTO questionnaire(treatment_id, day_no, question_no, question, response, threshold) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 4, 2, 'Unable to hold the desired position as mentioned for the desired time.', NULL, 0);
+INSERT INTO questionnaire(treatment_id, day_no, question_no, question, response, threshold) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 4, 3, 'Balance problem while performing  exercise 1-4.', NULL, 0);
+INSERT INTO questionnaire(treatment_id, day_no, question_no, question, response, threshold) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 4, 4, 'Difficulty in progressing further to increased holding time while doing exercise.', NULL, 0);
+INSERT INTO questionnaire(treatment_id, day_no, question_no, question, response, threshold) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 4, 5, 'Pain and/or stiffness in the knees.', NULL, 0);
 
 SELECT * FROM treatment;
 -- SELECT * FROM patient;

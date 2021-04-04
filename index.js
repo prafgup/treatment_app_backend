@@ -13,6 +13,7 @@ const  ProfileWithDb = require('./src/controllers/Profile.js');
 const DoctorWithDb = require('./src/controllers/Doctor.js');
 const PatientWithDb = require('./src/controllers/Patient.js');
 const RelativewithDb = require('./src/controllers/Relative.js');
+const Questionnaire = require('./src/controllers/Questionnaire.js');
 const  Auth = require('./src/middleware/Auth.js');
 const helper = require('./src/controllers/Helper.js');
 
@@ -58,6 +59,9 @@ app.post('/api/v1/doctor/get_one_patient', Auth.verifyToken, DoctorWithDb.getOne
 app.post('/api/v1/relative/update_friend_requests', Auth.verifyToken, RelativewithDb.updateFriendRequests);
 app.post('/api/v1/relative/update_exercise_requests', Auth.verifyToken, RelativewithDb.updateExerciseRequest);
 app.post('/api/v1/patient/update_exercises', Auth.verifyToken, PatientWithDb.updateExerciseStatus);
+app.post('/api/v1/questionnaire/get_patient_questionnaire', Auth.verifyToken, Questionnaire.get_questionnaire);
+app.post('/api/v1/questionnaire/fill_questionnaire',Auth.verifyToken,Questionnaire.fill_questionnaire);
+app.post('/api/v1/questionnaire/get_doctor/questionnaire', Auth.verifyToken, Questionnaire.get_questionnaire_doctor);
 
 app.get('/api/v1/profile/get', Auth.verifyToken, ProfileWithDb.getMyProfile);
 app.get('/api/v1/doctor/get_all_patients', Auth.verifyToken, DoctorWithDb.getAllPatients);
