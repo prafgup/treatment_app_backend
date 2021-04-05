@@ -226,7 +226,7 @@ INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUE
 INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(10, 'Climb up and down steps', '10 times with each foot', 10);
 INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(60, 'Sit to stand goal', 'N/A', 10);
 INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(4, 'Brisk walk with stick', 'Brisk walk for 20-30 minutes', 1200);
-
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(1, 'No exercises today', 'N/A', 10);
 
 SELECT * FROM treatment;
 -- SELECT * FROM patient;

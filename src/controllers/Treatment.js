@@ -35,7 +35,7 @@ const Treatment = {
             const treatmentID = uuid();
             // console.log(treatmentID);
             const questions = ['Pain and/or swelling in the knee', 'knee bending/flexion target (90 degree) achievable?', 'Incomplete knee extension/straightening of the knee', 'Unable to follow the given protocol as mentioned', 'Difficulty in doing the exercises as many times as mentioned', 'Unable to perform sit-to-stand at all', 'Unable to do sit-to-stand as many times as mentioned', 'Pain in the thighs during/after exercise', 'Pain in the knee during/after exercise', 'Unable to walk for more than 2 steps with the walker', 'Unable to perform sit-to-stand at all', 'Unable to do sit-to-stand as many times as mentioned', 'Pain in the thighs during/after exercise', 'Pain in the knee during/after exercise', 'Unable to walk for more than 2 steps with the walker', 'Unable to do the exercises as mentioned', 'Unable to hold the desired position as mentioned for the desired time', 'Balance problem while performing exercises 1-4', 'Difficulty in progressing further to increased holding time while doing exercise', 'Pain and/or stiffness in the knees'];
-            const query = 'INSERT INTO treatment(treatment_id, treatment_name, doctor_id, patient_id, treatment_start_date, treatment_end_date) VALUES($1, $2, $3, $4, $5, $6)';
+            const query = 'INSERT INTO treatment(treatment_id, treatment_name, doctor_id, patient_id, treatment_start_date, treatment_end_date, staff_1, staff_2) VALUES($1, $2, $3, $4, $5, $6, $7, $8)';
             var pad = function(num) { return ('00'+num).slice(-2) };
             var start_date = moment(new Date(treatment_start_date)).format(date_format);
             var end_date = moment(new Date(treatment_end_date)).format(date_format);
@@ -45,7 +45,9 @@ const Treatment = {
                 doctorID,
                 patientID,
                 start_date,
-                end_date
+                end_date,
+                req.body.staff_1,
+                req.body.staff_2
             ];
             start_date = new Date(treatment_start_date);
             end_date = new Date(treatment_end_date);
@@ -53,6 +55,12 @@ const Treatment = {
             // console.log(ret);
             const daily_query = 'INSERT INTO date_info(treatment_id, exercise_id, today_day, today_date) VALUES($1, $2, $3, $4)';
             const questionnaire_query = 'INSERT INTO questionnaire(treatment_id, day_no, question, response, threshold) VALUES($1, $2, $3, $4, $5)'
+            // Day 1-4 so that the app doesnt break
+            for(var i = 1;i<5;i++){            
+                var cur_date = moment(new Date(treatment_start_date)).add(i,'d').format(date_format);
+                var val = [treatmentID, 26, i, cur_date];
+                var tmp2 = await db.query(daily_query, val);
+            }
             // Day 5-10
             for(var i = 5;i<=10;i++){
                 // console.log("here1");

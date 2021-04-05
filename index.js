@@ -77,7 +77,7 @@ app.get('/api/v1/relative/getRequests', Auth.verifyToken, RelativewithDb.getRequ
 app.get('/api/v1/relative/getFriendRequests', Auth.verifyToken, RelativewithDb.getPatientRequests);
 
 
-console.log(helper.generateToken('37f8111a-f7ce-441f-946c-c9de32dfdce8'));
+console.log(helper.generateToken('37f8111a-f7ce-441f-946c-c9de32dfdce0'));
 console.log(helper.generateToken('2466d759-d15d-4882-8d2b-20f7139fa26a'));
 
 app.get("*",(req,res)=>{
