@@ -70,9 +70,16 @@ const Doctor = {
   async getAllPatients(req, res){
     console.log(req.body)
     const myId = req.user.id;
-    const getPatientData = 'SELECT users.mobile_number, profile_page.first_name, profile_page.last_name, profile_page.profile_pic, treatment.treatment_name, treatment.treatment_day, exercises.exercise_name, date_info.marked_by_patient, date_info.marked_by_relative FROM (((((treatment INNER JOIN profile_page ON treatment.patient_id = profile_page.user_id AND treatment.doctor_id = ($1)) INNER JOIN questionnaire ON questionnaire.treatment_id = treatment.treatment_id AND questionnaire.day_no = treatment.treatment_day) INNER JOIN date_info ON date_info.treatment_id = treatment.treatment_id AND date_info.today_day = treatment.treatment_day) INNER JOIN exercises ON date_info.exercise_id = exercises.exercise_id) INNER JOIN users ON users.user_id = treatment.patient_id)';
+    console.log(myId);
+    const getPatientData = 'SELECT users.mobile_number, profile_page.first_name, profile_page.last_name, profile_page.profile_pic, treatment.treatment_name, treatment.treatment_day, exercises.exercise_name, date_info.marked_by_patient, date_info.marked_by_relative FROM ((((treatment INNER JOIN profile_page ON treatment.patient_id = profile_page.user_id AND treatment.doctor_id = ($1)) INNER JOIN date_info ON date_info.treatment_id = treatment.treatment_id AND date_info.today_day = treatment.treatment_day) INNER JOIN exercises ON date_info.exercise_id = exercises.exercise_id) INNER JOIN users ON users.user_id = treatment.patient_id)';
+    // const allT = 'SELECT users.mobile_number, profile_page.first_name, profile_page.last_name, profile_page.profile_pic, treatment.treatment_name, treatment.treatment_day, exercises.exercise_name, date_info.marked_by_patient, date_info.marked_by_relative FROM ((((treatment INNER JOIN profile_page ON treatment.patient_id = profile_page.user_id AND treatment.doctor_id = ($1)) INNER JOIN date_info ON date_info.treatment_id = treatment.treatment_id AND date_info.today_day = 5) INNER JOIN exercises ON date_info.exercise_id = exercises.exercise_id) INNER JOIN users ON users.user_id = treatment.patient_id)';
+    // const allT = 'SELECT * FROM treatment WHERE doctor_id = ($1)';
+    // const allT = 'SELECT * FROM date_info WHERE today_day = 5';
     try{
+        // const ret = await db.query(allT,[myId]);
+        // console.log(ret.rows);
         const { rows } = await db.query(getPatientData, [myId]);
+        // console.log(rows);
         var arr = [];
         var i = 0;
         var n = Object.keys(rows).length;
