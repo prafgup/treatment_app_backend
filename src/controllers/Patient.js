@@ -25,7 +25,7 @@ const Patient = {
     const cur_date = moment(new Date()).format(date_format);
 
     const treatment_id = 'SELECT * FROM treatment WHERE patient_id = ($1) AND treatment_day > 0';
-    const exerciseQuery = 'SELECT date_info.today_day, exercises.exercise_name, exercises.exercise_rep, exercises.instructions, exercises.exercise_video_url, exercises.exercise_img_url, exercises.duration, date_info.marked_by_patient FROM (date_info INNER JOIN exercises ON date_info.exercise_id = exercises.exercise_id AND date_info.treatment_id = ($1) AND date_info.today_day <= ($2))';
+    const exerciseQuery = 'SELECT date_info.today_day, exercises.exercise_name, exercises.exercise_rep, exercises.instructions, exercises.exercise_video_url, exercises.exercise_img_url, exercises.duration, date_info.marked_by_patient FROM (date_info INNER JOIN exercises ON date_info.exercise_id = exercises.exercise_id AND date_info.treatment_id = ($1) AND date_info.today_date <= ($2))';
     try {
       const { rows } = await db.query(treatment_id, [myId]);
       // console.log("Treatment id");
@@ -36,7 +36,7 @@ const Patient = {
       if(treatmentID != null){
         const values = [
             treatmentID,
-            cur_day
+            cur_date
           ];
         const getTreatment = await db.query(exerciseQuery, values);
         // console.log("data");
