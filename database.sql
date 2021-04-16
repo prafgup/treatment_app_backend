@@ -89,8 +89,10 @@ CREATE TABLE IF NOT EXISTS
         staff_2 VARCHAR(256),
         FOREIGN KEY (doctor_id) REFERENCES doctor(user_id) ON DELETE CASCADE,
         FOREIGN KEY (patient_id) REFERENCES patient(user_id) ON DELETE CASCADE,
-        FOREIGN KEY (staff_1) REFERENCES staff(user_id),
-        FOREIGN KEY (staff_2) REFERENCES staff(user_id) -- ye dikkat degi to ek null value staff mai daalna padega
+        starred int DEFAULT 0,
+        critical int DEFAULT 0
+        -- FOREIGN KEY (staff_1) REFERENCES staff(user_id),
+        -- FOREIGN KEY (staff_2) REFERENCES staff(user_id) -- ye dikkat degi to ek null value staff mai daalna padega
     );
 
 CREATE TABLE IF NOT EXISTS
@@ -135,14 +137,14 @@ INSERT INTO doctor(user_id, department, designation, hospital, created_date, mod
 INSERT INTO users(user_id, mobile_number, created_date, modified_date) VALUES('ed7e013d-4401-4543-9ca8-ecfe95bb020a',9871029370,CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO staff(user_id, department, designation, hospital, created_date, modified_date) VALUES('ed7e013d-4401-4543-9ca8-ecfe95bb020a','Ortho', 'anaesthesia', 'B', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-INSERT INTO users(user_id, mobile_number, created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce8',1234568546,CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO users(user_id, mobile_number, created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce9',1234567811,CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO users(user_id, mobile_number, created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce0',1234567822,CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO users(user_id, mobile_number, created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce8',5234568546,CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO users(user_id, mobile_number, created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce9',6234567811,CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO users(user_id, mobile_number, created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce0',7234567822,CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO users(user_id, mobile_number, created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce1',9999999999,CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO patient(user_id, relative_1,relative_2,relative_1_status,relative_2_status,created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce8','9999999999','8750565754','W','W', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO patient(user_id, relative_1,relative_2,relative_1_status,relative_2_status,created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce9','9999999999','8750565754','A','W', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO patient(user_id, relative_1,relative_2,relative_1_status,relative_2_status,created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce0','8750565754','9999999999','W','A', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO patient(user_id, relative_1,relative_2,relative_1_status,relative_2_status,created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce1','8750565754','9999999999','W','R', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO patient(user_id, relative_1,relative_2,relative_1_status,relative_2_status,created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce1','8750565754','8999999999','W','R', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO profile_page(user_id, first_name, last_name, dob, home_address, email_id, created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce8','F', 'L', '1-10-2010','Ghar ka address', 'fl@asdfkj.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO profile_page(user_id, first_name, last_name, dob, home_address, email_id, created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce9','F', 'L', '1-10-2010','Ghar ka address', 'fl@asdfkj.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
@@ -162,7 +164,7 @@ INSERT INTO staff(user_id, department, designation, hospital, created_date, modi
 -- INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(10, 'straight leg raise (supine)', 'N/A', 5);
 -- INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(10, 'straight leg raise (side-lying)', 'N/A', 10);
 
-INSERT INTO users(user_id, mobile_number, created_date, modified_date) VALUES('2466d759-d15d-4882-8d2b-20f7139fa26a',1234567899, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO users(user_id, mobile_number, created_date, modified_date) VALUES('2466d759-d15d-4882-8d2b-20f7139fa26a',9234567899, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO doctor(user_id, department, designation, hospital, created_date, modified_date) VALUES('2466d759-d15d-4882-8d2b-20f7139fa26a','Ortho', 'Surgeon', 'B',CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 -- INSERT INTO treatment(treatment_id, treatment_name, doctor_id, patient_id, treatment_start_date, treatment_end_date, staff_1) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 'knee surgery', '2b6941fa-525e-45e9-88f1-582d19af6c34', '37f8111a-f7ce-441f-946c-c9de32dfdce8', CURRENT_DATE, CURRENT_DATE + 30, '2b6941fa-525e-45e9-88f1-582d19af6c34');
 

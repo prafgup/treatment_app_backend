@@ -24,10 +24,10 @@ const Patient = {
     const myId = req.user.id;
     const cur_date = moment(new Date()).format(date_format);
 
-    const treatment_id = 'SELECT * FROM treatment WHERE patient_id = ($1) AND treatment_end_date >= ($2)';
+    const treatment_id = 'SELECT * FROM treatment WHERE patient_id = ($1) AND treatment_day > 0';
     const exerciseQuery = 'SELECT date_info.today_day, exercises.exercise_name, exercises.exercise_rep, exercises.instructions, exercises.exercise_video_url, exercises.exercise_img_url, exercises.duration, date_info.marked_by_patient FROM (date_info INNER JOIN exercises ON date_info.exercise_id = exercises.exercise_id AND date_info.treatment_id = ($1) AND date_info.today_day <= ($2))';
     try {
-      const { rows } = await db.query(treatment_id, [myId, cur_date]);
+      const { rows } = await db.query(treatment_id, [myId]);
       // console.log("Treatment id");
         const treatment_data = null;
         const treatmentID = rows[0].treatment_id;
@@ -56,16 +56,16 @@ const Patient = {
     //   console.log(myID);
       const cur_date = moment(new Date()).format(date_format);
 
-      const treatment_id = 'SELECT treatment_id FROM treatment WHERE patient_id = ($1) AND treatment_end_date >= ($2)';
+      const treatment_id = 'SELECT treatment_id, treatment_day FROM treatment WHERE patient_id = ($1) AND treatment_day > 0';
       const exerciseQuery = 'SELECT date_info.today_day, exercises.exercise_name, date_info.marked_by_relative FROM (date_info INNER JOIN exercises ON date_info.exercise_id = exercises.exercise_id AND date_info.treatment_id = ($1) AND date_info.marked_by_patient = 1)';
       try{
         const val1 = [
-            myID,
-            cur_date
+            myID
         ];
         const {rows} = await db.query(treatment_id, val1);
         const treatmentID = rows[0].treatment_id;
-        console.log(treatmentID);
+        // console.log(rows[0].treatment_day);
+        // console.log(treatmentID);
         if(treatmentID != null){
             const values = [
                 treatmentID
@@ -87,12 +87,10 @@ const Patient = {
     const myID = req.user.id;
     const cur_day = req.body.day;
     const cur_date = moment(new Date()).format(date_format);
-    const treatmentQuery = 'SELECT * FROM treatment WHERE treatment_start_date <= ($1) AND treatment_end_date >= ($2) AND patient_id = ($3)';
+    const treatmentQuery = 'SELECT * FROM treatment WHERE treatment_day > 0 AND patient_id = ($1)';
     const query = 'UPDATE date_info SET marked_by_patient = ($1) WHERE date_info.treatment_id = ($2) AND date_info.today_day = ($3)';
     const update_day = 'UPDATE treatment SET treatment_day = treatment_day + 1 WHERE treatment_id = ($1)';
     const val1 = [
-      cur_date,
-      cur_date,
       myID
     ];
     try{

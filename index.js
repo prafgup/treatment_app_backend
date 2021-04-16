@@ -67,7 +67,8 @@ app.post('/api/v1/treatment/week_1_2', Auth.verifyToken, Treatment.week_1_2);
 app.post('/api/v1/treatment/week_3', Auth.verifyToken, Treatment.week_3);
 app.post('/api/v1/treatment/week_4_5', Auth.verifyToken, Treatment.week_4_5);
 app.post('/api/v1/treatment/week_6', Auth.verifyToken, Treatment.week_6);
-
+app.post('/api/v1/doctor/star', Auth.verifyToken, DoctorWithDb.star);
+app.post('/api/v1/doctor/critical', Auth.verifyToken, DoctorWithDb.critical);
 
 app.get('/api/v1/profile/get', Auth.verifyToken, ProfileWithDb.getMyProfile);
 app.get('/api/v1/doctor/get_all_patients', Auth.verifyToken, DoctorWithDb.getAllPatients);
@@ -77,7 +78,7 @@ app.get('/api/v1/relative/getRequests', Auth.verifyToken, RelativewithDb.getRequ
 app.get('/api/v1/relative/getFriendRequests', Auth.verifyToken, RelativewithDb.getPatientRequests);
 
 
-console.log(helper.generateToken('37f8111a-f7ce-441f-946c-c9de32dfdce0'));
+console.log(helper.generateToken('37f8111a-f7ce-441f-946c-c9de32dfdce1'));
 console.log(helper.generateToken('2466d759-d15d-4882-8d2b-20f7139fa26a'));
 
 app.get("*",(req,res)=>{

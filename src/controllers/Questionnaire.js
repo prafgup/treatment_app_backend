@@ -10,10 +10,10 @@ const Questionnaire = {
     async get_questionnaire(req, res){// for patient side
         const myID = req.user.id;
         const cur_day = req.body.day;
-        const query = 'SELECT * FROM treatment WHERE patient_id = ($1) AND treatment_start_date <= ($2) AND treatment_end_date >= ($3)';
+        const query = 'SELECT * FROM treatment WHERE patient_id = ($1) AND treatment_day > 0';
         const cur_date = moment(new Date()).format(date_format);
         try{
-            const ret = await db.query(query, [myID, cur_date, cur_date]);
+            const ret = await db.query(query, [myID]);
             if(!ret.rows[0]){
                 return res.status(400).send({'message':'Treatment not found for this patient'});
             }
@@ -30,10 +30,10 @@ const Questionnaire = {
         const cur_day = req.body.day;
         const question_id = req.body.id;
         const response = req.body.response;
-        const query = 'SELECT * FROM treatment WHERE patient_id = ($1) AND treatment_start_date <= ($2) AND treatment_end_date >= ($3)';
+        const query = 'SELECT * FROM treatment WHERE patient_id = ($1) AND treatment_day > 0';
         const cur_date = moment(new Date()).format(date_format);
         try{
-            const ret = await db.query(query, [myID, cur_date, cur_date]);
+            const ret = await db.query(query, [myID]);
             if(!ret.rows[0]){
                 return res.status(400).send({'message':'Treatment not found for this patient'});
             }
@@ -50,7 +50,7 @@ const Questionnaire = {
         const cur_day = req.body.day;
         const mobile_number = req.body.mobile_number;//patient mobile number
         const mobileQuery = 'SELECT * FROM users WHERE mobile_number = ($1)';
-        const query = 'SELECT * FROM treatment WHERE patient_id = ($1) AND treatment_start_date <= ($2) AND treatment_end_date >= ($3)';
+        const query = 'SELECT * FROM treatment WHERE patient_id = ($1) AND treatment_day > 0';
         const cur_date = moment(new Date()).format(date_format);
         try{
             const users = await db.query(mobileQuery, [mobile_number]);
@@ -59,7 +59,7 @@ const Questionnaire = {
             }
             const myID = users.rows[0].user_id;
             // console.log(myID);
-            const ret = await db.query(query, [myID, cur_date, cur_date]);
+            const ret = await db.query(query, [myID]);
             // console.log(ret.rows[0]);
             if(!ret.rows[0]){
                 return res.status(400).send({'message':'Treatment not found for this patient'});

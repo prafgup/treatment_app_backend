@@ -15,6 +15,7 @@ const Treatment = {
         const mobileQuery = 'SELECT * FROM users WHERE mobile_number = ($1)';
         const check_doctor = 'SELECT * FROM doctor WHERE user_id = ($1)';
         const check_patient = 'SELECT * FROM patient WHERE user_id = ($1)';//ask if patient has to be registered, or we can create a new treatment for anyone?
+        const finish_last_treatment = 'SELECT * FROM treatment WHERE treatment_day > 0 AND patient_id = ($1)';
         try{
             const doctor = await db.query(check_doctor, [doctorID]);
             // console.log(doctorID);
@@ -27,6 +28,11 @@ const Treatment = {
                 return res.status(400).send({'message':'User not registered'});
             }
             const patientID = user.rows[0].user_id;
+            const tt1 = await db.query(finish_last_treatment, [patientID]);
+            if(tt1.rows[0]){
+                const updateQuery1 = 'UPDATE treatment SET treatment_day = -1 WHERE treatment_id = ($1)';
+                const tt2 = await db.query(updateQuery1, [tt1.rows[0].treatment_id]);
+            }
             const tmp1 = await db.query(check_patient, [patientID]);
             // console.log(patientID);
             if(!tmp1.rows[0]){
@@ -39,6 +45,16 @@ const Treatment = {
             var pad = function(num) { return ('00'+num).slice(-2) };
             var start_date = moment(new Date(treatment_start_date)).format(date_format);
             var end_date = moment(new Date(treatment_end_date)).format(date_format);
+            const t1 = await db.query(mobileQuery, [req.body.staff_1]);
+            const staff_1 = null;
+            const staff_2 = null;
+            if(t1.rows[0]){
+                staff_1 = t1.rows[0].user_id;
+            }
+            const t2 = await db.query(mobileQuery, [req.body.staff_2]);
+            if(t2.rows[0]){
+                staff_2 = t2.rows[0].user_id;
+            }
             const values = [
                 treatmentID,
                 'Total Knee Arthroplasty Protocol',
@@ -46,15 +62,15 @@ const Treatment = {
                 patientID,
                 start_date,
                 end_date,
-                req.body.staff_1,
-                req.body.staff_2
+                staff_1,
+                staff_2
             ];
             start_date = new Date(treatment_start_date);
             end_date = new Date(treatment_end_date);
             const ret = await db.query(query, values);
             // console.log(ret);
             const daily_query = 'INSERT INTO date_info(treatment_id, exercise_id, today_day, today_date) VALUES($1, $2, $3, $4)';
-            const questionnaire_query = 'INSERT INTO questionnaire(treatment_id, day_no, question, response, threshold) VALUES($1, $2, $3, $4, $5)'
+            const questionnaire_query = 'INSERT INTO questionnaire(treatment_id, day_no, question, response, threshold, question_no) VALUES($1, $2, $3, $4, $5, $6)'
             // Day 1-4 so that the app doesnt break
             for(var i = 1;i<5;i++){            
                 var cur_date = moment(new Date(treatment_start_date)).add(i,'d').format(date_format);
@@ -74,7 +90,7 @@ const Treatment = {
                 }
                 // console.log("here1.5");
                 for(var j = 1;j<=5;j++){
-                    var val = [treatmentID, i, questions[j-1], null, 0];
+                    var val = [treatmentID, i, questions[j-1], null, 0, j];
                     var tmp2 = await db.query(questionnaire_query, val);
                 }
                 // console.log("here2");
@@ -86,7 +102,7 @@ const Treatment = {
                     var tmp2 = await db.query(daily_query, val);
                 }
                 for(var j = 6;j<=10;j++){
-                    var val = [treatmentID, i, questions[j-1], null, 0];
+                    var val = [treatmentID, i, questions[j-1], null, 0,j];
                     var tmp2 = await db.query(questionnaire_query, val);
                 }
             }
@@ -133,7 +149,7 @@ const Treatment = {
             start_date = new Date(treatment_start_date);
             end_date = new Date(treatment_end_date);
             const daily_query = 'INSERT INTO date_info(treatment_id, exercise_id, today_day, today_date) VALUES($1, $2, $3, $4)';
-            const questionnaire_query = 'INSERT INTO questionnaire(treatment_id, day_no, question, response, threshold) VALUES($1, $2, $3, $4, $5)'
+            const questionnaire_query = 'INSERT INTO questionnaire(treatment_id, day_no, question, response, threshold, question_no) VALUES($1, $2, $3, $4, $5, $6)'
             console.log("3");
             // var cur_date = moment(new Date(treatment_start_date)).add(30,'d').format(date_format);
             // console.log(cur_date);
@@ -146,7 +162,7 @@ const Treatment = {
                     }
                 }
                 for(var j = 11;j<=15;j++){
-                    const val = [treatmentID, i, questions[j-1], null, 0];
+                    const val = [treatmentID, i, questions[j-1], null, 0,j];
                     const tmp2 = await db.query(questionnaire_query, val);
                 }
             }
@@ -192,7 +208,7 @@ const Treatment = {
             start_date = new Date(treatment_start_date);
             end_date = new Date(treatment_end_date);
             const daily_query = 'INSERT INTO date_info(treatment_id, exercise_id, today_day, today_date) VALUES($1, $2, $3, $4)';
-            const questionnaire_query = 'INSERT INTO questionnaire(treatment_id, day_no, question, response, threshold) VALUES($1, $2, $3, $4, $5)'
+            const questionnaire_query = 'INSERT INTO questionnaire(treatment_id, day_no, question, response, threshold, question_no) VALUES($1, $2, $3, $4, $5, $6)'
             console.log("4");
             for(var i = 31;i<=37;i++){
                 var cur_date = moment(new Date(treatment_start_date)).add(i,'d').format(date_format);
@@ -201,7 +217,7 @@ const Treatment = {
                     var tmp2 = await db.query(daily_query, val);
                 }
                 for(var j = 11;j<=15;j++){
-                    var val = [treatmentID, i, questions[j-1], null, 0];
+                    var val = [treatmentID, i, questions[j-1], null, 0, j];
                     var tmp2 = await db.query(questionnaire_query, val);
                 }
             }

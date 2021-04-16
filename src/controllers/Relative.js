@@ -11,7 +11,7 @@ const Relative = {
         const myID = req.user.id;
         const cur_date = moment(new Date()).format(date_format);
         const myNumber = 'SELECT * FROM users WHERE user_id = $1';
-        const query = 'SELECT profile_page.first_name, profile_page.last_name, date_info.today_day, exercises.exercise_name, treatment.patient_id, date_info.exercise_id, date_info.marked_by_relative FROM ((((date_info INNER JOIN treatment ON treatment.treatment_id = date_info.treatment_id AND date_info.marked_by_patient = 1 AND treatment.treatment_end_date >= ($1)) INNER JOIN profile_page ON profile_page.user_id = treatment.patient_id) INNER JOIN patient ON patient.user_id = treatment.patient_id AND (patient.relative_1 = ($2) OR patient.relative_2 = ($3))) INNER JOIN exercises ON exercises.exercise_id = date_info.exercise_id)';
+        const query = 'SELECT profile_page.first_name, profile_page.last_name, date_info.today_day, exercises.exercise_name, treatment.patient_id, date_info.exercise_id, date_info.marked_by_relative FROM ((((date_info INNER JOIN treatment ON treatment.treatment_id = date_info.treatment_id AND date_info.marked_by_patient = 1 AND treatment.treatment_day > 0) INNER JOIN profile_page ON profile_page.user_id = treatment.patient_id) INNER JOIN patient ON patient.user_id = treatment.patient_id AND (patient.relative_1 = ($1) OR patient.relative_2 = ($2))) INNER JOIN exercises ON exercises.exercise_id = date_info.exercise_id)';
         try{
             const user = await db.query(myNumber, [myID]);
             if (!user.rows[0]) {
@@ -19,7 +19,7 @@ const Relative = {
             }
             console.log("Relative");
             console.log(user.rows[0].mobile_number);
-            const {rows} = await db.query(query, [cur_date, user.rows[0].mobile_number, user.rows[0].mobile_number]);
+            const {rows} = await db.query(query, [user.rows[0].mobile_number, user.rows[0].mobile_number]);
             // console.log(rows);
             return res.status(200).send(rows);
         }catch(error){
@@ -95,12 +95,10 @@ const Relative = {
         const cur_day = req.body.day;
         const cur_date = moment(new Date()).format(date_format);
         const query = 'UPDATE date_info SET marked_by_relative = ($1) WHERE date_info.today_day = ($2) AND date_info.exercise_id = ($3) AND date_info.treatment_id = ($4)';
-        const getTreatment = 'SELECT * FROM treatment WHERE treatment.patient_id = ($1) AND treatment.treatment_start_date <= ($2) AND treatment.treatment_end_date >= ($3)';
+        const getTreatment = 'SELECT * FROM treatment WHERE treatment.patient_id = ($1) AND treatment.treatment_day > 0';
         // const debug = 'SELECT * FROM date_info WHERE marked_by_relative = 1';
         const values1 = [
-            req.body.patient_id,
-            cur_date,
-            cur_date
+            req.body.patient_id
         ];
         try{
             const user = await db.query(getTreatment, values1);
