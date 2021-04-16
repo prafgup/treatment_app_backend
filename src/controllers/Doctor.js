@@ -71,7 +71,7 @@ const Doctor = {
     console.log(req.body)
     const myId = req.user.id;
     console.log(myId);
-    const getPatientData = 'SELECT users.mobile_number, profile_page.first_name, profile_page.last_name, profile_page.profile_pic, treatment.treatment_start_date, treatment.treatment_name, treatment.treatment_day, exercises.exercise_name, date_info.marked_by_patient, date_info.marked_by_relative FROM ((((treatment INNER JOIN profile_page ON treatment.patient_id = profile_page.user_id AND treatment.doctor_id = ($1)) INNER JOIN date_info ON date_info.treatment_id = treatment.treatment_id AND date_info.today_day = treatment.treatment_day AND treatment.treatment_day > 0) INNER JOIN exercises ON date_info.exercise_id = exercises.exercise_id) INNER JOIN users ON users.user_id = treatment.patient_id)';
+    const getPatientData = 'SELECT users.mobile_number, profile_page.first_name, profile_page.last_name, profile_page.profile_pic, treatment.treatment_start_date, treatment.treatment_name, treatment.treatment_day, exercises.exercise_name, date_info.marked_by_patient, date_info.marked_by_relative, treatment.starred, treatment.critical FROM ((((treatment INNER JOIN profile_page ON treatment.patient_id = profile_page.user_id AND treatment.doctor_id = ($1)) INNER JOIN date_info ON date_info.treatment_id = treatment.treatment_id AND date_info.today_day = treatment.treatment_day AND treatment.treatment_day > 0) INNER JOIN exercises ON date_info.exercise_id = exercises.exercise_id) INNER JOIN users ON users.user_id = treatment.patient_id)';
     // const allT = 'SELECT users.mobile_number, profile_page.first_name, profile_page.last_name, profile_page.profile_pic, treatment.treatment_name, treatment.treatment_day, exercises.exercise_name, date_info.marked_by_patient, date_info.marked_by_relative FROM ((((treatment INNER JOIN profile_page ON treatment.patient_id = profile_page.user_id AND treatment.doctor_id = ($1)) INNER JOIN date_info ON date_info.treatment_id = treatment.treatment_id AND date_info.today_day = 5) INNER JOIN exercises ON date_info.exercise_id = exercises.exercise_id) INNER JOIN users ON users.user_id = treatment.patient_id)';
     // const allT = 'SELECT * FROM treatment WHERE doctor_id = ($1)';
     // const allT = 'SELECT * FROM date_info WHERE today_day = 5';
@@ -86,7 +86,7 @@ const Doctor = {
         // console.log(n);
         var sorted = [];
         while(i<n){
-          sorted.push([rows[i].mobile_number, rows[i].first_name, rows[i].last_name, rows[i].profile_pic, rows[i].treatment_name, rows[i].treatment_day, rows[i].marked_by_patient, rows[i].marked_by_relative]);
+          sorted.push([rows[i].mobile_number, rows[i].first_name, rows[i].last_name, rows[i].profile_pic, rows[i].treatment_name, rows[i].treatment_day, rows[i].marked_by_patient, rows[i].marked_by_relative, rows[i].starred, rows[i].critical]);
           i++;
         }
         // console.log(sorted);
@@ -113,7 +113,7 @@ const Doctor = {
           if(patient_cnt > 0){
             patient_cnt = 1;
           }
-          arr.push([sorted[i][0], sorted[i][1], sorted[i][2], sorted[i][3], sorted[i][4], sorted[i][5], patient_cnt, relative_cnt]);
+          arr.push([sorted[i][0], sorted[i][1], sorted[i][2], sorted[i][3], sorted[i][4], sorted[i][5], patient_cnt, relative_cnt, sorted[i][8], sorted[i][9]]);
           i = tmp+1;
         }
         console.log(arr);
