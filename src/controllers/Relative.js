@@ -11,7 +11,8 @@ const Relative = {
         const myID = req.user.id;
         const cur_date = moment(new Date()).format(date_format);
         const myNumber = 'SELECT * FROM users WHERE user_id = $1';
-        const query = 'SELECT profile_page.first_name, profile_page.last_name, date_info.today_day, exercises.exercise_name, treatment.patient_id, date_info.exercise_id, date_info.marked_by_relative FROM ((((date_info INNER JOIN treatment ON treatment.treatment_id = date_info.treatment_id AND date_info.marked_by_patient = 1 AND treatment.treatment_day > 0) INNER JOIN profile_page ON profile_page.user_id = treatment.patient_id) INNER JOIN patient ON patient.user_id = treatment.patient_id AND ((patient.relative_1 = ($1) AND patient.relative_1_status = "A") OR (patient.relative_2 = ($2) AND patient.relative_2_status = "A"))) INNER JOIN exercises ON exercises.exercise_id = date_info.exercise_id)';
+        const accepted = "A";
+        const query = 'SELECT profile_page.first_name, profile_page.last_name, date_info.today_day, exercises.exercise_name, treatment.patient_id, date_info.exercise_id, date_info.marked_by_relative FROM ((((date_info INNER JOIN treatment ON treatment.treatment_id = date_info.treatment_id AND date_info.marked_by_patient = 1 AND treatment.treatment_day > 0) INNER JOIN profile_page ON profile_page.user_id = treatment.patient_id) INNER JOIN patient ON patient.user_id = treatment.patient_id AND ((patient.relative_1 = ($1) AND patient.relative_1_status = ($3)) OR (patient.relative_2 = ($2) AND patient.relative_2_status = ($3)))) INNER JOIN exercises ON exercises.exercise_id = date_info.exercise_id)';
         try{
             const user = await db.query(myNumber, [myID]);
             if (!user.rows[0]) {
@@ -19,7 +20,7 @@ const Relative = {
             }
             console.log("Relative");
             console.log(user.rows[0].mobile_number);
-            const {rows} = await db.query(query, [user.rows[0].mobile_number, user.rows[0].mobile_number]);
+            const {rows} = await db.query(query, [user.rows[0].mobile_number, user.rows[0].mobile_number, accepted]);
             // console.log(rows);
             return res.status(200).send(rows);
         }catch(error){

@@ -80,6 +80,7 @@ app.get('/api/v1/relative/getFriendRequests', Auth.verifyToken, RelativewithDb.g
 
 console.log(helper.generateToken('37f8111a-f7ce-441f-946c-c9de32dfdce1'));
 console.log(helper.generateToken('2466d759-d15d-4882-8d2b-20f7139fa26a'));
+console.log(helper.generateToken('37f8111a-f7ce-441f-946c-c9de32dfdce0'));
 
 app.get("*",(req,res)=>{
   if(process.env.NODE_ENV==="production"){
