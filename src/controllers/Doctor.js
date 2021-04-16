@@ -186,8 +186,8 @@ const Doctor = {
       if(!t2.rows[0]){
         return res.status(400).send({'message':'This patient does not have a treatment with this doctor'});
       }
-      const updateQuery = 'UPDATE treatment SET starred = star WHERE treatment_id = ($1)';
-      const rows = await db.query(updateQuery, [t2.rows[0].treatment_id]);
+      const updateQuery = 'UPDATE treatment SET starred = ($1) WHERE treatment_id = ($2)';
+      const rows = await db.query(updateQuery, [star, t2.rows[0].treatment_id]);
       return res.status(400).send(rows);
     }catch(error){
       return res.status(400).send(error);
@@ -209,8 +209,8 @@ const Doctor = {
       if(!t2.rows[0]){
         return res.status(400).send({'message':'This patient does not have a treatment with this doctor'});
       }
-      const updateQuery = 'UPDATE treatment SET critical = star WHERE treatment_id = ($1)';
-      const rows = await db.query(updateQuery, [t2.rows[0].treatment_id]);
+      const updateQuery = 'UPDATE treatment SET critical = ($1) WHERE treatment_id = ($2)';
+      const rows = await db.query(updateQuery, [star, t2.rows[0].treatment_id]);
       return res.status(400).send(rows);
     }catch(error){
       return res.status(400).send(error);
