@@ -18,6 +18,17 @@ const Patient = {
       return res.status(400).send(error);
     }
   },
+  async getPatientRelativeInfo(req, res) {
+    console.log(req.body)
+    const myId = req.user.id;
+    const myProfile = 'SELECT * FROM patient where user_id = ($1)';
+    try {
+      const { rows } = await db.query(myProfile, [myId]);
+      return res.status(200).send({ "profile" : rows[0] });
+    } catch(error) {
+      return res.status(400).send(error);
+    }
+  },
 
   async getExerciseData(req, res) {
     console.log(req.body)
