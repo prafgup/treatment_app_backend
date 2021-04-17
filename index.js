@@ -71,6 +71,7 @@ app.post('/api/v1/doctor/star', Auth.verifyToken, DoctorWithDb.star);
 app.post('/api/v1/doctor/critical', Auth.verifyToken, DoctorWithDb.critical);
 
 app.get('/api/v1/profile/get', Auth.verifyToken, ProfileWithDb.getMyProfile);
+app.get('/api/v1/patient/getPatientRelativeInfo',Auth.verifyToken, PatientWithDb.getPatientRelativeInfo);
 app.get('/api/v1/doctor/get_all_patients', Auth.verifyToken, DoctorWithDb.getAllPatients);
 app.get('/api/v1/patient/get_treatment_data',Auth.verifyToken, PatientWithDb.getExerciseData);
 app.get('/api/v1/patient/get_request_status', Auth.verifyToken, PatientWithDb.getRequestStatus);
