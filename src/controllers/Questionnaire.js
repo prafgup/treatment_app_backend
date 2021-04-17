@@ -39,6 +39,24 @@ const Questionnaire = {
             }
             const query2 = 'UPDATE questionnaire SET response = ($1) WHERE day_no = ($2) AND treatment_id = ($3) AND question_no = ($4)';
             const rows = await db.query(query2, [response, cur_day, ret.rows[0].treatment_id, question_id]);
+            const query3 = 'SELECT response FROM questionnaire WHERE day_no = ($1) AND treatment_id = ($2)';
+            const tmp1 = await db.query(query3, [cur_day, ret.rows[0].treatment_id]);
+            var cnt = 0;
+            var total = 0;
+            for(var i = 0;i<tmp1.rows.length;i++){
+                if(tmp1.rows[i].response!=null){
+                    total += tmp1.rows[i].response;
+                    cnt += 1;
+                }
+            }
+            if(total*10 > 25*cnt){
+                const updateQuery1 = 'UPDATE treatment SET starred = 1 WHERE treatment_id = ($1)';
+                const tmp2 = await db.query(updateQuery1, [ret.rows[0].treatment_id]);
+            }
+            else{
+                const updateQuery1 = 'UPDATE treatment SET starred = 0 WHERE treatment_id = ($1)';
+                const tmp2 = await db.query(updateQuery1, [ret.rows[0].treatment_id]);      
+            }
             return res.status(200).send({'message':'Successfully updated the response for this question'});
         }catch(error){
             return res.status(400).send(error);

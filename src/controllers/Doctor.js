@@ -131,7 +131,8 @@ const Doctor = {
     const mobileQuery = 'SELECT * FROM users WHERE mobile_number = ($1)';
     const query = 'SELECT * FROM treatment WHERE treatment.doctor_id = ($1) AND treatment.patient_id = ($2) AND treatment.treatment_day > 0';
     // const query2 = 'SELECT date_info.today_date, date_info.marked_by_patient, date_info.marked_by_relative FROM (treatment INNER JOIN date_info ON treatment.treatment_id = date_info.treatment_id AND treatment.doctor_id = ($1) AND treatment.patient_id = ($2) AND date_info.today_date BETWEEN treatment.treatment_start_date AND ($3))';
-    const query2 = 'SELECT date_info.today_day, exercises.exercise_name, date_info.marked_by_patient, date_info.marked_by_relative FROM ((treatment INNER JOIN date_info ON treatment.treatment_id = date_info.treatment_id AND treatment.doctor_id = ($1) AND treatment.patient_id = ($2) AND date_info.today_day <= treatment.treatment_day AND treatment.treatment_id = ($3)) INNER JOIN exercises ON exercises.exercise_id = date_info.exercise_id)';
+    const query2 = 'SELECT date_info.today_day, exercises.exercise_name, date_info.marked_by_patient, date_info.marked_by_relative FROM ((treatment INNER JOIN date_info ON treatment.treatment_id = date_info.treatment_id AND treatment.doctor_id = ($1) AND treatment.patient_id = ($2) AND date_info.today_date <= ($4) AND treatment.treatment_id = ($3)) INNER JOIN exercises ON exercises.exercise_id = date_info.exercise_id)';
+    const cur_date = moment(new Date()).format(date_format);
     try{
       const tmp1 = await db.query(mobileQuery, [mobile_number]);
       if(!tmp1.rows[0]){
@@ -142,7 +143,7 @@ const Doctor = {
       if(!ret.rows[0]){
         return res.status(400).send('This patient does not have a treatment with this doctor');
       }
-      const {rows} = await db.query(query2, [doctorID, patientID, ret.rows[0].treatment_id]);
+      const {rows} = await db.query(query2, [doctorID, patientID, ret.rows[0].treatment_id, cur_date]);
       return res.status(200).send(rows);
     }catch(error){
       return res.status(400).send(error);
@@ -186,7 +187,7 @@ const Doctor = {
       if(!t2.rows[0]){
         return res.status(400).send({'message':'This patient does not have a treatment with this doctor'});
       }
-      console.log(t2.rows);
+      // console.log(t2.rows);
       const updateQuery = 'UPDATE treatment SET starred = ($1) WHERE treatment_id = ($2)';
       const rows = await db.query(updateQuery, [star, t2.rows[0].treatment_id]);
       return res.status(200).send(rows);
