@@ -176,7 +176,7 @@ const Doctor = {
     const mobile_number = req.body.mobile_number;
     const star = req.body.star;
     const mobileQuery = 'SELECT * FROM users WHERE mobile_number = ($1)';
-    const query = 'SELECT * FROM treatment WHERE treatment.doctor_id = ($1) AND treatment.patient_id = ($2) AND treatment_day > 0';
+    const query = 'SELECT * FROM treatment WHERE treatment.doctor_id = ($1) AND treatment.patient_id = ($2) AND treatment.treatment_day > 0';
     try{
       const t1 = await db.query(mobileQuery, [mobile_number]);
       if(!t1.rows[0]){
@@ -186,9 +186,10 @@ const Doctor = {
       if(!t2.rows[0]){
         return res.status(400).send({'message':'This patient does not have a treatment with this doctor'});
       }
+      console.log(t2.rows);
       const updateQuery = 'UPDATE treatment SET starred = ($1) WHERE treatment_id = ($2)';
       const rows = await db.query(updateQuery, [star, t2.rows[0].treatment_id]);
-      return res.status(400).send(rows);
+      return res.status(200).send(rows);
     }catch(error){
       return res.status(400).send(error);
     }
@@ -211,7 +212,7 @@ const Doctor = {
       }
       const updateQuery = 'UPDATE treatment SET critical = ($1) WHERE treatment_id = ($2)';
       const rows = await db.query(updateQuery, [star, t2.rows[0].treatment_id]);
-      return res.status(400).send(rows);
+      return res.status(200).send(rows);
     }catch(error){
       return res.status(400).send(error);
     }
