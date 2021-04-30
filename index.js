@@ -17,6 +17,7 @@ const Questionnaire = require('./src/controllers/Questionnaire.js');
 const Treatment = require('./src/controllers/Treatment.js');
 const  Auth = require('./src/middleware/Auth.js');
 const helper = require('./src/controllers/Helper.js');
+const Doctor = require("./src/controllers/Doctor.js");
 
 dotenv.config();
 
@@ -69,6 +70,7 @@ app.post('/api/v1/treatment/week_4_5', Auth.verifyToken, Treatment.week_4_5);
 app.post('/api/v1/treatment/week_6', Auth.verifyToken, Treatment.week_6);
 app.post('/api/v1/doctor/star', Auth.verifyToken, DoctorWithDb.star);
 app.post('/api/v1/doctor/critical', Auth.verifyToken, DoctorWithDb.critical);
+app.post('/api/v1/doctor/update_doctor_profile', Auth.verifyToken, DoctorWithDb.updateDoctorProfile);
 
 app.get('/api/v1/profile/get', Auth.verifyToken, ProfileWithDb.getMyProfile);
 app.get('/api/v1/patient/getPatientRelativeInfo',Auth.verifyToken, PatientWithDb.getPatientRelativeInfo);
@@ -77,7 +79,7 @@ app.get('/api/v1/patient/get_treatment_data',Auth.verifyToken, PatientWithDb.get
 app.get('/api/v1/patient/get_request_status', Auth.verifyToken, PatientWithDb.getRequestStatus);
 app.get('/api/v1/relative/getRequests', Auth.verifyToken, RelativewithDb.getRequests);
 app.get('/api/v1/relative/getFriendRequests', Auth.verifyToken, RelativewithDb.getPatientRequests);
-
+app.get('/api/v1/doctor/get_doctor_profile', Auth.verifyToken, DoctorWithDb.getDoctorProfile);
 
 console.log(helper.generateToken('37f8111a-f7ce-441f-946c-c9de32dfdce1'));
 console.log(helper.generateToken('2466d759-d15d-4882-8d2b-20f7139fa26a'));
