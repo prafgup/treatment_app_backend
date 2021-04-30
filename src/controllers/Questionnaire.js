@@ -17,7 +17,7 @@ const Questionnaire = {
             if(!ret.rows[0]){
                 return res.status(400).send({'message':'Treatment not found for this patient'});
             }
-            const query2 = 'SELECT question_no, question FROM questionnaire WHERE treatment_id = ($1) AND day_no = ($2)';
+            const query2 = 'SELECT question_no, question, question_hindi, question_punjabi FROM questionnaire WHERE treatment_id = ($1) AND day_no = ($2)';
             const rows = await db.query(query2, [ret.rows[0].treatment_id, cur_day]);
             return res.status(200).send(rows.rows);
         }catch(error){
@@ -82,7 +82,7 @@ const Questionnaire = {
             if(!ret.rows[0]){
                 return res.status(400).send({'message':'Treatment not found for this patient'});
             }
-            const query2 = 'SELECT question_no, question, response FROM questionnaire WHERE treatment_id = ($1) AND day_no = ($2)';
+            const query2 = 'SELECT question_no, question, question_hindi, question_punjabi, response FROM questionnaire WHERE treatment_id = ($1) AND day_no = ($2)';
             const rows = await db.query(query2, [ret.rows[0].treatment_id, cur_day]);
             return res.status(200).send(rows.rows);
         }catch(error){

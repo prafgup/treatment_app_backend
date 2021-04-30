@@ -125,6 +125,8 @@ CREATE TABLE IF NOT EXISTS
         question_no int,
         day_no int DEFAULT 0,
         question VARCHAR(256) NOT NULL,
+        question_hindi VARCHAR(256),
+        question_punjabi VARCHAR(256),
         response int,
         threshold int DEFAULT 0,
         PRIMARY KEY (treatment_id, day_no, question),
@@ -202,33 +204,35 @@ INSERT INTO doctor(user_id, department, designation, hospital, created_date, mod
 -- INSERT INTO questionnaire(treatment_id, day_no, question_no, question, response, threshold) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 4, 4, 'Difficulty in progressing further to increased holding time while doing exercise.', NULL, 0);
 -- INSERT INTO questionnaire(treatment_id, day_no, question_no, question, response, threshold) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 4, 5, 'Pain and/or stiffness in the knees.', NULL, 0);
 
-INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(25, 'ankle toe movement', 'N/A', 10);
-INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(10, 'isometric quads ', 'N/A', 4);
-INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(10, 'straight leg raise (supine)', 'N/A', 5);
-INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(10, 'straight leg raise (side-lying)', 'N/A', 10);
-INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(10, 'stretching for TA, Hamstring and adductor muscles', 'N/A', 10);
-INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(10, 'knee bending', 'N/A', 10);
-INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(3, 'weight bearing with walker', '50 meters approx', 10);
-INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(5, 'Ice pack application', '15-20 minutes after each exercise', 10);
-INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(10, 'Heel slide', 'N/A', 10);
-INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(10, 'sit to stand', 'Set 1 : 8-10 am, Set 2: 4-6 pm', 10);
-INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(3, 'Brisk walk ', '10-15 minutes walk', 10);
-INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(5, 'Brisk walk ', '10-15 minutes walk', 10);
-INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(10, 'Standing hip flexion (knee extended)', '2 seconds hold (Add 1 second every alternate day)', 2);
-INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(10, 'Standing hip flexion (knee 90 degrees flexed)', '2 seconds hold (Add 1 second every alternate day)', 2);
-INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(10, 'Standing hip extension', '2 seconds hold (Add 1 second every alternate day)', 10);
-INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(10, 'Standing hip abduction', '2 seconds hold (Add 1 second every alternate day)', 10);
-INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(40, 'Sit to stand goal break in ', '10 reps set with 3 minutes in between', 10);
-INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(10, 'Straight leg raise in prone position', '5 seconds each (Add 1 second every alternate day)', 5);
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration, exercise_video_url) VALUES(25, 'ankle toe movement', 'N/A', 10, 'https://www.youtube.com/watch?v=sOnjAIrjt8s');
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration, exercise_video_url) VALUES(10, 'isometric quads ', 'N/A', 4, 'https://www.youtube.com/watch?v=_gDqujlCREg');
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration, exercise_video_url) VALUES(10, 'straight leg raise (supine)', 'N/A', 5, 'https://www.youtube.com/watch?v=m1oMMTzQVrQ');
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration, exercise_video_url) VALUES(10, 'straight leg raise (side-lying)', 'N/A', 10, 'https://www.youtube.com/watch?v=zoGOmA10GtQ');
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration, exercise_video_url) VALUES(10, 'TA stretching', 'N/A', 10, 'https://www.youtube.com/watch?v=qcU2q07wxNU');
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration, exercise_video_url) VALUES(10, 'knee bending', 'N/A', 10, 'https://www.youtube.com/watch?v=J07D4GvHfJg');
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration, exercise_video_url) VALUES(3, 'weight bearing with walker', '50 meters approx', 10, null);
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration, exercise_video_url) VALUES(5, 'Ice pack application', '15-20 minutes after each exercise', 10, null);
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration, exercise_video_url) VALUES(10, 'Heel slide', 'N/A', 10, 'https://www.youtube.com/watch?v=FKMEDYI9KdU');
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration, exercise_video_url) VALUES(10, 'sit to stand', 'Set 1 : 8-10 am, Set 2: 4-6 pm', 10, 'https://www.youtube.com/watch?v=cbEFlGWZr6I');
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration, exercise_video_url) VALUES(3, 'Brisk walk ', '10-15 minutes walk', 10, null);
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration, exercise_video_url) VALUES(5, 'Brisk walk ', '10-15 minutes walk', 10, null);
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration, exercise_video_url) VALUES(10, 'Standing hip flexion (knee extended)', '2 seconds hold (Add 1 second every alternate day)', 2, 'https://www.youtube.com/watch?v=OTC7tBbzIfo');
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration, exercise_video_url) VALUES(10, 'Standing hip flexion (knee 90 degrees flexed)', '2 seconds hold (Add 1 second every alternate day)', 2, null);
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration, exercise_video_url) VALUES(10, 'Standing hip extension', '2 seconds hold (Add 1 second every alternate day)', 10, 'https://www.youtube.com/watch?v=LNkKryPRbUw');
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration, exercise_video_url) VALUES(10, 'Standing hip abduction', '2 seconds hold (Add 1 second every alternate day)', 10, 'https://www.youtube.com/watch?v=4X2MyktnPB0');
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration, exercise_video_url) VALUES(40, 'Sit to stand goal break in ', '10 reps set with 3 minutes in between', 10, null);
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration, exercise_video_url) VALUES(10, 'Straight leg raise in prone position', '5 seconds each (Add 1 second every alternate day)', 5, null);
 
-INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(1, 'Heel raises', 'N/A', 1);
-INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(1, 'Resistive Strengthening exercises', 'N/A', 1);
-INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(10, 'Progression from walker to stick', 'N/A', 1);
-INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(1, 'Stair Climbing with stick', 'N/A', 10);
-INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(10, 'Climb up and down steps', '10 times with each foot', 10);
-INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(60, 'Sit to stand goal', 'N/A', 10);
-INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(4, 'Brisk walk with stick', 'Brisk walk for 20-30 minutes', 1200);
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration, exercise_video_url) VALUES(1, 'Heel raises', 'N/A', 1, 'https://www.youtube.com/watch?v=xH_crmFJktA');
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration, exercise_video_url) VALUES(1, 'Resistive Strengthening exercises', 'N/A', 1, null);
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration, exercise_video_url) VALUES(10, 'Progression from walker to stick', 'N/A', 1, null);
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration, exercise_video_url) VALUES(1, 'Stair Climbing with stick', 'N/A', 10, null);
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration, exercise_video_url) VALUES(10, 'Climb up and down steps', '10 times with each foot', 10, null);
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration, exercise_video_url) VALUES(60, 'Sit to stand goal', 'N/A', 10, null);
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration, exercise_video_url) VALUES(4, 'Brisk walk with stick', 'Brisk walk for 20-30 minutes', 1200, null);
 INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration) VALUES(1, 'No exercises today', 'N/A', 10);
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration, exercise_video_url) VALUES(10, 'Hamstring Stretching', 'N/A', 10, 'https://www.youtube.com/watch?v=EN_tV1yfItM');
+INSERT INTO exercises(exercise_rep, exercise_name, instructions, duration, exercise_video_url) VALUES(10, 'Adductor muscles stretching', 'N/A', 10, 'https://www.youtube.com/watch?v=TtZx6H8pQZU');
 
 SELECT * FROM treatment;
 -- SELECT * FROM patient;
