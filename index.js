@@ -18,6 +18,7 @@ const Treatment = require('./src/controllers/Treatment.js');
 const  Auth = require('./src/middleware/Auth.js');
 const helper = require('./src/controllers/Helper.js');
 const Doctor = require("./src/controllers/Doctor.js");
+const VerifyUsers = require("./src/controllers/VerifiedUsers").VerifiedUsers;
 
 dotenv.config();
 
@@ -50,6 +51,9 @@ app.get("/", (req, res) => {
   res.json({ message: "Welcome to treatment application." });
 });
 
+app.post('/api/v1/admin/add_verified_number', VerifyUsers.addToVerified);
+app.post('/api/v1/admin/check_verified_number', VerifyUsers.checkVerified);
+
 
 app.post('/api/v1/users/login',UserWithDb.login);  // mobile_number , auth_token , user_type
 app.post('/api/v1/register/doctor', Auth.verifyToken, UserWithDb.registerDoctor);
@@ -71,6 +75,8 @@ app.post('/api/v1/treatment/week_6', Auth.verifyToken, Treatment.week_6);
 app.post('/api/v1/doctor/star', Auth.verifyToken, DoctorWithDb.star);
 app.post('/api/v1/doctor/critical', Auth.verifyToken, DoctorWithDb.critical);
 app.post('/api/v1/doctor/update_doctor_profile', Auth.verifyToken, DoctorWithDb.updateDoctorProfile);
+
+
 
 app.get('/api/v1/profile/get', Auth.verifyToken, ProfileWithDb.getMyProfile);
 app.get('/api/v1/patient/getPatientRelativeInfo',Auth.verifyToken, PatientWithDb.getPatientRelativeInfo);

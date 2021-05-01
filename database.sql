@@ -1,15 +1,26 @@
 -- -- Change AUTO_INCREMENT to IDENTITY while pushing to database, pgadmin doesnt accept AUTO_INCREMENT
-DROP TABLE IF EXISTS date_info;
-DROP TABLE IF EXISTS questionnaire;
-DROP TABLE IF EXISTS treatment;
-DROP TABLE IF EXISTS exercises;
-DROP TABLE IF EXISTS staff;
-DROP TABLE IF EXISTS relative_table;
-DROP TABLE IF EXISTS doctor;
-DROP TABLE IF EXISTS patient;
-DROP TABLE IF EXISTS profile_page;
-DROP TABLE IF EXISTS users;
+-- DROP TABLE IF EXISTS date_info;
+-- DROP TABLE IF EXISTS questionnaire;
+-- DROP TABLE IF EXISTS treatment;
+-- DROP TABLE IF EXISTS exercises;
+-- DROP TABLE IF EXISTS staff;
+-- DROP TABLE IF EXISTS relative_table;
+-- DROP TABLE IF EXISTS doctor;
+-- DROP TABLE IF EXISTS patient;
+-- DROP TABLE IF EXISTS profile_page;
+-- DROP TABLE IF EXISTS users;
+-- DROP TABLE IF EXISTS verified_users;
 
+CREATE TABLE IF NOT EXISTS
+    verified_users(
+        id VARCHAR(256) PRIMARY KEY,
+		added_by VARCHAR(256),
+        mobile_number VARCHAR(10) NOT NULL,
+        created_date TIMESTAMP,
+        modified_date TIMESTAMP
+    );
+	
+	
 CREATE TABLE IF NOT EXISTS
     users(
         user_id VARCHAR(256) PRIMARY KEY,
@@ -132,6 +143,11 @@ CREATE TABLE IF NOT EXISTS
         PRIMARY KEY (treatment_id, day_no, question),
         FOREIGN KEY (treatment_id) REFERENCES treatment(treatment_id) ON DELETE CASCADE
     );
+
+INSERT INTO verified_users(id, added_by, mobile_number,created_date, modified_date) VALUES('2b6941fa-525e-45e9-88f1-582d19af23u','ADMIN_PG',7777777777,CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO verified_users(id, added_by, mobile_number,created_date, modified_date) VALUES('2b6941fa-525e-45e9-88f1-582d19af23g','ADMIN_PG',9871029370,CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO verified_users(id, added_by, mobile_number,created_date, modified_date) VALUES('2b6941fa-525e-45e9-88f1-582d19af23h','ADMIN_PG',9234567899,CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
 
 INSERT INTO users(user_id, mobile_number, created_date, modified_date) VALUES('2b6941fa-525e-45e9-88f1-582d19af6c34',7777777777,CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO doctor(user_id, department, designation, hospital, created_date, modified_date) VALUES('2b6941fa-525e-45e9-88f1-582d19af6c34','Ortho', 'Surgeon', 'A', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);

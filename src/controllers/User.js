@@ -2,6 +2,7 @@ const moment = require('moment');
 const { uuid } = require('uuidv4');
 const db = require('../db');
 const Helper = require('./Helper');
+const VerifyUsersUtil = require("./VerifiedUsers").VerifiedUsersUtil;
 
 
 const CreateNewUser = {
@@ -23,6 +24,7 @@ const CreateNewUser = {
     }
   },
 }
+
 
 
 const User = {
@@ -73,10 +75,15 @@ const User = {
       }
 
       var firstTime = null;
+      var checkVerified = null
       // user_type doesnt exists
       if(req.body.user_type == 'p'){
         firstTime = await db.query(checkPatient, [rows[0].user_id]);
       }else if(req.body.user_type == 'd'){
+        checkVerified = await VerifyUsersUtil.checkNumber(req.body.mobile_number)
+        if( checkVerified == null){
+          return res.status(400).send({ "message" : "Doctor Not Authorized To Register" });
+        }
         firstTime = await db.query(checkDoctor, [rows[0].user_id]);
       }else if(req.body.user_type == 's'){
         firstTime = await db.query(checkStaff, [rows[0].user_id]);

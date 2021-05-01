@@ -32,7 +32,7 @@ pool.on('remove', () => {
   //process.exit(0);
 });
 
-pool.on('remove', (err) => {
+pool.on('error', (err) => {
   console.log('Error');
   console.log(err);
 });
