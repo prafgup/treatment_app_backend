@@ -15,7 +15,7 @@ const Treatment = {
         const mobileQuery = 'SELECT * FROM users WHERE mobile_number = ($1)';
         const check_doctor = 'SELECT * FROM doctor WHERE user_id = ($1)';
         const check_patient = 'SELECT * FROM patient WHERE user_id = ($1)';//ask if patient has to be registered, or we can create a new treatment for anyone?
-        const finish_last_treatment = 'SELECT * FROM treatment WHERE treatment_day > 0 AND patient_id = ($1)';
+        const finish_last_treatment = 'SELECT * FROM treatment WHERE treatment_day > 0 AND patient_number = ($1)';
         try{
             const doctor = await db.query(check_doctor, [doctorID]);
             // console.log(doctorID);
@@ -28,7 +28,7 @@ const Treatment = {
                 return res.status(400).send({'message':'User not registered'});
             }
             const patientID = user.rows[0].user_id;
-            const tt1 = await db.query(finish_last_treatment, [patientID]);
+            const tt1 = await db.query(finish_last_treatment, [mobile_number]);
             if(tt1.rows[0]){
                 const updateQuery1 = 'UPDATE treatment SET treatment_day = -1 WHERE treatment_id = ($1)';
                 const tt2 = await db.query(updateQuery1, [tt1.rows[0].treatment_id]);
@@ -43,7 +43,7 @@ const Treatment = {
             const questions = ['Pain and/or swelling in the knee', 'knee bending/flexion target (90 degree) achievable?', 'Incomplete knee extension/straightening of the knee', 'Unable to follow the given protocol as mentioned', 'Difficulty in doing the exercises as many times as mentioned', 'Unable to perform sit-to-stand at all', 'Unable to do sit-to-stand as many times as mentioned', 'Pain in the thighs during/after exercise', 'Pain in the knee during/after exercise', 'Unable to walk for more than 2 steps with the walker', 'Unable to perform sit-to-stand at all', 'Unable to perform sit-to-stand at all', 'Pain in the thighs during/after exercise', 'Pain in the knee during/after exercise', 'Unable to walk for more than 2 steps with the walker', 'Unable to do the exercises as mentioned', 'Unable to hold the desired position as mentioned for the desired time', 'Balance problem while performing exercises 1-4', 'Difficulty in progressing further to increased holding time while doing exercise', 'Pain and/or stiffness in the knees'];
             const questions_h = ['घुटने में दर्द और / या सूजन', 'घुटने झुकने / flexion लक्ष्य (90 डिग्री) प्राप्त करने योग्य?', 'घुटने का अधूरा विस्तार / सीधा होना', 'बताए अनुसार दिए गए प्रोटोकॉल का पालन करने में असमर्थ', 'जितनी बार बताया गया है उतनी बार व्यायाम करने में कठिनाई', 'सिट-टू-स्टैंड करने में असमर्थ', 'उल्लेख के अनुसार कई बार बैठने के लिए खड़े होने में असमर्थ', 'व्यायाम के दौरान / बाद में जांघों में दर्द', 'व्यायाम के दौरान / बाद में घुटने में दर्द', 'वॉकर के साथ 2 से अधिक चरणों के लिए चलने में असमर्थ', 'सिट-टू-स्टैंड करने में असमर्थ', 'उल्लेख के अनुसार कई बार बैठने के लिए खड़े होने में असमर्थ', 'व्यायाम के दौरान / बाद में जांघों में दर्द', 'व्यायाम के दौरान / बाद में घुटने में दर्द', 'वॉकर के साथ 2 से अधिक चरणों के लिए चलने में असमर्थ', 'उल्लेख के अनुसार अभ्यास करने में असमर्थ', 'वांछित समय के लिए वांछित स्थिति रखने में असमर्थ', '1-4 व्यायाम करते समय संतुलन की समस्या', 'व्यायाम करते समय होल्डिंग के समय को और अधिक बढ़ाने में कठिनाई', 'घुटनों में दर्द और / या जकड़न'];
             const questions_p = ['ਦਰਦ ਅਤੇ / ਜਾਂ ਗੋਡੇ ਵਿਚ ਸੋਜ', 'ਗੋਡੇ ਝੁਕਣ / ਮੋੜ ਨਿਸ਼ਾਨਾ (90 ਡਿਗਰੀ) ਪ੍ਰਾਪਤ ਕਰਨ ਯੋਗ?', 'ਗੋਡੇ ਦਾ ਅਧੂਰਾ ਵਧਣਾ / ਸਿੱਧਾ ਹੋਣਾ', 'ਦੱਸੇ ਅਨੁਸਾਰ ਦਿੱਤੇ ਪ੍ਰੋਟੋਕੋਲ ਦੀ ਪਾਲਣਾ ਕਰਨ ਵਿੱਚ ਅਸਮਰੱਥ', 'ਜਿੰਨੀ ਵਾਰ ਦੱਸਿਆ ਗਿਆ ਕਸਰਤ ਕਰਨ ਵਿਚ ਮੁਸ਼ਕਲ', 'ਬਿਲਕੁਲ ਵੀ ਬੈਠਣ ਤੋਂ ਅਸਮਰੱਥ ਹੈ', 'ਜਿੰਨਾ ਵਾਰ ਦੱਸਿਆ ਗਿਆ ਸੀ, ਬੈਠ ਕੇ ਬੈਠਣ ਵਿਚ ਅਸਮਰਥ', 'ਕਸਰਤ ਦੌਰਾਨ / ਬਾਅਦ ਵਿੱਚ ਪੱਟਾਂ ਵਿੱਚ ਦਰਦ', 'ਕਸਰਤ ਦੌਰਾਨ / ਬਾਅਦ ਗੋਡੇ ਵਿਚ ਦਰਦ', 'ਵਾਕਰ ਨਾਲ 2 ਕਦਮ ਤੋਂ ਵੱਧ ਤੁਰਨ ਵਿੱਚ ਅਸਮਰੱਥ', 'ਬਿਲਕੁਲ ਵੀ ਬੈਠਣ ਤੋਂ ਅਸਮਰੱਥ ਹੈ', 'ਬਿਲਕੁਲ ਵੀ ਬੈਠਣ ਤੋਂ ਅਸਮਰੱਥ ਹੈ', 'ਕਸਰਤ ਦੌਰਾਨ / ਬਾਅਦ ਵਿੱਚ ਪੱਟਾਂ ਵਿੱਚ ਦਰਦ', 'ਕਸਰਤ ਦੌਰਾਨ / ਬਾਅਦ ਗੋਡੇ ਵਿਚ ਦਰਦ', 'ਵਾਕਰ ਨਾਲ 2 ਕਦਮ ਤੋਂ ਵੱਧ ਤੁਰਨ ਵਿੱਚ ਅਸਮਰੱਥ', 'ਜ਼ਿਕਰ ਕੀਤੇ ਅਨੁਸਾਰ ਕਸਰਤ ਕਰਨ ਤੋਂ ਅਸਮਰੱਥ', 'ਲੋੜੀਂਦੇ ਸਮੇਂ ਲਈ ਦੱਸੇ ਅਨੁਸਾਰ ਲੋੜੀਂਦੀ ਸਥਿਤੀ ਨੂੰ ਸੰਭਾਲਣ ਵਿੱਚ ਅਸਮਰਥ ਅਭਿਆਸ ਕਰਨ ਵੇਲੇ ਸੰਤੁਲਨ ਦੀ ਸਮੱਸਿਆ 1-4', 'ਕਸਰਤ ਕਰਦਿਆਂ ਹੋਲਡ ਕਰਨ ਦੇ ਸਮੇਂ ਨੂੰ ਵਧਾਉਣ ਲਈ ਅੱਗੇ ਵਧਣ ਵਿਚ ਮੁਸ਼ਕਲ', 'ਦਰਦ ਅਤੇ / ਜਾਂ ਗੋਡਿਆਂ ਵਿਚ ਕਠੋਰਤਾ'];
-            const query = 'INSERT INTO treatment(treatment_id, treatment_name, doctor_id, patient_id, treatment_start_date, treatment_end_date, staff_1, staff_2) VALUES($1, $2, $3, $4, $5, $6, $7, $8)';
+            const query = 'INSERT INTO treatment(treatment_id, treatment_name, doctor_id, patient_number, treatment_start_date, treatment_end_date, staff_1, staff_2) VALUES($1, $2, $3, $4, $5, $6, $7, $8)';
             var pad = function(num) { return ('00'+num).slice(-2) };
             var start_date = moment(new Date(treatment_start_date)).format(date_format);
             var end_date = moment(new Date(treatment_end_date)).format(date_format);
@@ -61,7 +61,7 @@ const Treatment = {
                 treatmentID,
                 'Total Knee Arthroplasty Protocol',
                 doctorID,
-                patientID,
+                mobile_number,
                 start_date,
                 end_date,
                 staff_1,

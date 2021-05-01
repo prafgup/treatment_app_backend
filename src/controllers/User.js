@@ -204,9 +204,12 @@ const User = {
 
 
     const registerPatientUser = `INSERT INTO patient(user_id, relative_1,relative_2,relative_1_status,relative_2_status,created_date, modified_date) VALUES($1, $2, $3, $4, $5, $6, $7) returning *`;
-    const patientPage = 'INSERT INTO profile_page(user_id, first_name, last_name, dob, profile_pic, home_address, email_id, created_date, modified_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) returning *';
+    const patientPage = 'INSERT INTO profile_page(user_id, first_name, last_name, dob, profile_pic, home_address, email_id, created_date, modified_date, mobile_number) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) returning *';
     const checkProfile = 'SELECT * FROM profile_page where user_id = $1'
-    
+    const mobileQuery = 'SELECT * FROM users WHERE user_id = ($1)';
+    const mobileVal = [
+      myID
+    ];
     const values = [
       myId,
       req.body.relative_1,
@@ -216,25 +219,26 @@ const User = {
       moment(new Date()),
       moment(new Date())
     ];
-    const profilePageValues = [
-      myId,
-      req.body.first_name, 
-      req.body.last_name,
-      req.body.dob, 
-      req.body.profile_pic,
-      req.body.home_address,
-      req.body.email_id,
-      moment(new Date()),
-      moment(new Date())
-    ];
 
     try {
       const { rows } = await db.query(registerPatientUser, values);
       if (!rows[0]) {
         return res.status(400).send({'message': 'Can not register patient'});
       }
-
+      const t1 = await db.query(mobileQuery, mobileVal);
       const check = await db.query(checkProfile, [myId]); // check profile exists
+      const profilePageValues = [
+        myId,
+        req.body.first_name, 
+        req.body.last_name,
+        req.body.dob, 
+        req.body.profile_pic,
+        req.body.home_address,
+        req.body.email_id,
+        moment(new Date()),
+        moment(new Date()),
+        t1.rows[0].mobile_number
+      ];
       if (!check.rows[0]){
         await db.query(patientPage, profilePageValues);
       }

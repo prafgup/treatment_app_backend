@@ -35,10 +35,12 @@ const Patient = {
     const myId = req.user.id;
     const cur_date = moment(new Date()).format(date_format);
 
-    const treatment_id = 'SELECT * FROM treatment WHERE patient_id = ($1) AND treatment_day > 0';
+    const treatment_id = 'SELECT * FROM treatment WHERE patient_number = ($1) AND treatment_day > 0';
     const exerciseQuery = 'SELECT date_info.today_day, exercises.exercise_name, exercises.exercise_rep, exercises.instructions, exercises.exercise_video_url, exercises.exercise_img_url, exercises.duration, date_info.marked_by_patient FROM (date_info INNER JOIN exercises ON date_info.exercise_id = exercises.exercise_id AND date_info.treatment_id = ($1) AND date_info.today_date <= ($2))';
+    const mobileQuery = 'SELECT * FROM users WHERE user_id = ($1)';
     try {
-      const { rows } = await db.query(treatment_id, [myId]);
+      const t1 = await db.query(mobileQuery, [myID]);
+      const { rows } = await db.query(treatment_id, [t1.rows[0].mobile_number]);
       // console.log("Treatment id");
         const treatment_data = null;
         const treatmentID = rows[0].treatment_id;
@@ -67,13 +69,15 @@ const Patient = {
     //   console.log(myID);
       const cur_date = moment(new Date()).format(date_format);
 
-      const treatment_id = 'SELECT treatment_id, treatment_day FROM treatment WHERE patient_id = ($1) AND treatment_day > 0';
+      const treatment_id = 'SELECT treatment_id, treatment_day FROM treatment WHERE patient_number = ($1) AND treatment_day > 0';
       const exerciseQuery = 'SELECT date_info.today_day, exercises.exercise_name, date_info.marked_by_relative FROM (date_info INNER JOIN exercises ON date_info.exercise_id = exercises.exercise_id AND date_info.treatment_id = ($1) AND date_info.marked_by_patient = 1)';
+      const mobileQuery = 'SELECT * FROM users WHERE user_id = ($1)';
       try{
         const val1 = [
             myID
         ];
-        const {rows} = await db.query(treatment_id, val1);
+        const t1 = await db.query(mobileQuery, [myID]);
+        const {rows} = await db.query(treatment_id, [t1.rows[0].mobile_number]);
         const treatmentID = rows[0].treatment_id;
         // console.log(rows[0].treatment_day);
         // console.log(treatmentID);
@@ -98,14 +102,16 @@ const Patient = {
     const myID = req.user.id;
     const cur_day = req.body.day;
     const cur_date = moment(new Date()).format(date_format);
-    const treatmentQuery = 'SELECT * FROM treatment WHERE treatment_day > 0 AND patient_id = ($1)';
+    const treatmentQuery = 'SELECT * FROM treatment WHERE treatment_day > 0 AND patient_number = ($1)';
     const query = 'UPDATE date_info SET marked_by_patient = ($1) WHERE date_info.treatment_id = ($2) AND date_info.today_day = ($3)';
+    const mobileQuery = 'SELECT * FROM users WHERE user_id = ($1)';
     const update_day = 'UPDATE treatment SET treatment_day = treatment_day + 1 WHERE treatment_id = ($1)';
     const val1 = [
       myID
     ];
     try{
-      const users = await db.query(treatmentQuery, val1);
+      const t1 = await db.query(mobileQuery, [myID]);
+      const users = await db.query(treatmentQuery, [t1.rows[0].mobile_number]);
       if(!users.rows[0]){
         return res.status(400).send({'message':'Cannot find treatment'});
       }
