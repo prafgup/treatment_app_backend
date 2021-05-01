@@ -1,15 +1,15 @@
 -- -- Change AUTO_INCREMENT to IDENTITY while pushing to database, pgadmin doesnt accept AUTO_INCREMENT
--- DROP TABLE IF EXISTS date_info;
--- DROP TABLE IF EXISTS questionnaire;
--- DROP TABLE IF EXISTS treatment;
--- DROP TABLE IF EXISTS exercises;
--- DROP TABLE IF EXISTS staff;
--- DROP TABLE IF EXISTS relative_table;
--- DROP TABLE IF EXISTS doctor;
--- DROP TABLE IF EXISTS patient;
--- DROP TABLE IF EXISTS profile_page;
--- DROP TABLE IF EXISTS users;
--- DROP TABLE IF EXISTS verified_users;
+DROP TABLE IF EXISTS date_info;
+DROP TABLE IF EXISTS questionnaire;
+DROP TABLE IF EXISTS treatment;
+DROP TABLE IF EXISTS exercises;
+DROP TABLE IF EXISTS staff;
+DROP TABLE IF EXISTS relative_table;
+DROP TABLE IF EXISTS doctor;
+DROP TABLE IF EXISTS patient;
+DROP TABLE IF EXISTS profile_page;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS verified_users;
 
 CREATE TABLE IF NOT EXISTS
     verified_users(
@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS
         staff_1 VARCHAR(256),
         staff_2 VARCHAR(256),
         FOREIGN KEY (doctor_id) REFERENCES doctor(user_id) ON DELETE CASCADE,
-        FOREIGN KEY (patient_id) REFERENCES patient(user_id) ON DELETE CASCADE,
+        FOREIGN KEY (patient_number) REFERENCES users(mobile_number) ON DELETE CASCADE,
         starred int DEFAULT 0,
         critical int DEFAULT 0
         -- FOREIGN KEY (staff_1) REFERENCES staff(user_id),
@@ -165,10 +165,10 @@ INSERT INTO patient(user_id, relative_1,relative_2,relative_1_status,relative_2_
 INSERT INTO patient(user_id, relative_1,relative_2,relative_1_status,relative_2_status,created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce0','8750565754','9999999999','W','A', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO patient(user_id, relative_1,relative_2,relative_1_status,relative_2_status,created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce1','8750565754','8999999999','A','R', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-INSERT INTO profile_page(user_id, first_name, last_name, dob, home_address, email_id, created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce8','F', 'L', '1-10-2010','Ghar ka address', 'fl@asdfkj.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO profile_page(user_id, first_name, last_name, dob, home_address, email_id, created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce9','F', 'L', '1-10-2010','Ghar ka address', 'fl@asdfkj.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO profile_page(user_id, first_name, last_name, dob, home_address, email_id, created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce0','F', 'L', '1-10-2010','Ghar ka address', 'fl@asdfkj.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO profile_page(user_id, first_name, last_name, dob, home_address, email_id, created_date, modified_date) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce1','F', 'L', '1-10-2010','Ghar ka address', 'fl@asdfkj.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO profile_page(user_id, first_name, last_name, dob, home_address, email_id, created_date, modified_date, mobile_number) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce8','F', 'L', '1-10-2010','Ghar ka address', 'fl@asdfkj.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 5234568546);
+INSERT INTO profile_page(user_id, first_name, last_name, dob, home_address, email_id, created_date, modified_date, mobile_number) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce9','F', 'L', '1-10-2010','Ghar ka address', 'fl@asdfkj.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 6234567811);
+INSERT INTO profile_page(user_id, first_name, last_name, dob, home_address, email_id, created_date, modified_date, mobile_number) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce0','F', 'L', '1-10-2010','Ghar ka address', 'fl@asdfkj.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 8750565754);
+INSERT INTO profile_page(user_id, first_name, last_name, dob, home_address, email_id, created_date, modified_date, mobile_number) VALUES('37f8111a-f7ce-441f-946c-c9de32dfdce1','F', 'L', '1-10-2010','Ghar ka address', 'fl@asdfkj.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 9999999999);
 -- add question details here, as they wont be changed later
 INSERT INTO users(user_id, mobile_number, created_date, modified_date) VALUES('0f8ec339-c38b-4832-b10d-b8f288fe0100', 999999999, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO relative_table(user_id, mobile_number, created_date, modified_date) VALUES('0f8ec339-c38b-4832-b10d-b8f288fe0100', 999999999, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
