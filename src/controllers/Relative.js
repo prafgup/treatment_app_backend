@@ -97,7 +97,7 @@ const Relative = {
         const cur_date = moment(new Date()).format(date_format);
         const query = 'UPDATE date_info SET marked_by_relative = ($1) WHERE date_info.today_day = ($2) AND date_info.exercise_id = ($3) AND date_info.treatment_id = ($4)';
         const getTreatment = 'SELECT * FROM treatment WHERE treatment.patient_number = ($1) AND treatment.treatment_day > 0';
-        const mobileQuery = 'SELECT * FROM users WHERE mobile_number = ($1)';
+        const mobileQuery = 'SELECT * FROM users WHERE user_id = ($1)';
         // const debug = 'SELECT * FROM date_info WHERE marked_by_relative = 1';
         const values1 = [
             req.body.patient_id
