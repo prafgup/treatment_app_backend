@@ -224,20 +224,26 @@ const Doctor = {
   async updateStaff(req, res){
     const treatmentID = req.body.treatmentID;
     const myID = req.user.id;
-    const mobileQuery = 'SELECT * FROM users WHERE user.mobile_number = ($1)';
+    const mobileQuery = 'SELECT * FROM users WHERE users.mobile_number = ($1)';
     const m1 = req.body.mobile_number1;
     const m2 = req.body.mobile_number2;
     var staff_1 = null;
     var staff_2 = null;
     try{
+      console.log([m1, m2])
+      if(m1 !=''){
       const t1 = await db.query(mobileQuery, [m1]);
       if(t1.rows[0]){
         staff_1 = t1.rows[0].user_id;
       }
+    }
+    if(m2 != ''){
       const t2 = await db.query(mobileQuery, [m2]);
       if(t2.rows[0]){
         staff_2 = t2.rows[0].user_id;
       }
+    }
+      console.log([staff_1, staff_2, treatmentID])
       const query = 'UPDATE treatment SET staff_1 = ($1), staff_2 = ($2) WHERE treatment_id = ($3)';
       const rows = await db.query(query, [staff_1, staff_2, treatmentID]);
       return res.status(200).send({'message':'Updated staff details'});

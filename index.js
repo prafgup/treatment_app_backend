@@ -89,7 +89,7 @@ app.get('/api/v1/relative/getFriendRequests', Auth.verifyToken, RelativewithDb.g
 app.get('/api/v1/doctor/get_doctor_profile', Auth.verifyToken, DoctorWithDb.getDoctorProfile);
 
 console.log(helper.generateToken('37f8111a-f7ce-441f-946c-c9de32dfdce1'));
-console.log(helper.generateToken('a2e263d1-bf78-44e1-b04a-891d0038fad5'));
+console.log(helper.generateToken('493d0182-a9c3-4d77-a3e0-f215879600f2'));
 console.log(helper.generateToken('7e4d326b-ae74-417b-ae80-53bfa3b0fb00'));
 
 app.get("*",(req,res)=>{

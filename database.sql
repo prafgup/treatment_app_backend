@@ -1,15 +1,15 @@
 -- -- Change AUTO_INCREMENT to IDENTITY while pushing to database, pgadmin doesnt accept AUTO_INCREMENT
-DROP TABLE IF EXISTS date_info;
-DROP TABLE IF EXISTS questionnaire;
-DROP TABLE IF EXISTS treatment;
-DROP TABLE IF EXISTS exercises;
-DROP TABLE IF EXISTS staff;
-DROP TABLE IF EXISTS relative_table;
-DROP TABLE IF EXISTS doctor;
-DROP TABLE IF EXISTS patient;
-DROP TABLE IF EXISTS profile_page;
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS verified_users;
+-- DROP TABLE IF EXISTS date_info;
+-- DROP TABLE IF EXISTS questionnaire;
+-- DROP TABLE IF EXISTS treatment;
+-- DROP TABLE IF EXISTS exercises;
+-- DROP TABLE IF EXISTS staff;
+-- DROP TABLE IF EXISTS relative_table;
+-- DROP TABLE IF EXISTS doctor;
+-- DROP TABLE IF EXISTS patient;
+-- DROP TABLE IF EXISTS profile_page;
+-- DROP TABLE IF EXISTS users;
+-- DROP TABLE IF EXISTS verified_users;
 
 CREATE TABLE IF NOT EXISTS
     verified_users(
@@ -102,7 +102,6 @@ CREATE TABLE IF NOT EXISTS
         staff_1 VARCHAR(256),
         staff_2 VARCHAR(256),
         FOREIGN KEY (doctor_id) REFERENCES doctor(user_id) ON DELETE CASCADE,
-        FOREIGN KEY (patient_number) REFERENCES users(mobile_number) ON DELETE CASCADE,
         starred int DEFAULT 0,
         critical int DEFAULT 0
         -- FOREIGN KEY (staff_1) REFERENCES staff(user_id),

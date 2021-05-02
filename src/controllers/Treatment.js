@@ -24,14 +24,13 @@ const Treatment = {
             }
             // console.log(mobile_number);
             const user = await db.query(mobileQuery, [mobile_number]);
-            if(!user.rows[0]){
-                return res.status(400).send({'message':'User not registered'});
-            }
-            const patientID = user.rows[0].user_id;
-            const tt1 = await db.query(finish_last_treatment, [mobile_number]);
-            if(tt1.rows[0]){
-                const updateQuery1 = 'UPDATE treatment SET treatment_day = -1 WHERE treatment_id = ($1)';
-                const tt2 = await db.query(updateQuery1, [tt1.rows[0].treatment_id]);
+            if(user.rows[0]){
+                const patientID = user.rows[0].user_id;
+                const tt1 = await db.query(finish_last_treatment, [mobile_number]);
+                if(tt1.rows[0]){
+                    const updateQuery1 = 'UPDATE treatment SET treatment_day = -1 WHERE treatment_id = ($1)';
+                    const tt2 = await db.query(updateQuery1, [tt1.rows[0].treatment_id]);
+                }
             }
             const treatmentID = uuid();
             // console.log(treatmentID);
@@ -43,8 +42,8 @@ const Treatment = {
             var start_date = moment(new Date(treatment_start_date)).format(date_format);
             var end_date = moment(new Date(treatment_end_date)).format(date_format);
             const t1 = await db.query(mobileQuery, [req.body.staff_1]);
-            const staff_1 = null;
-            const staff_2 = null;
+            var staff_1 = null;
+            var staff_2 = null;
             if(t1.rows[0]){
                 staff_1 = t1.rows[0].user_id;
             }
@@ -126,6 +125,7 @@ const Treatment = {
             return res.status(200).send({'treatmentID': treatmentID});
             // return res.status(200).send({'message':'Treatment created for this patient'});
         }catch(error){
+            console.log(error)
             return res.status(400).send(error);
         }
     },
