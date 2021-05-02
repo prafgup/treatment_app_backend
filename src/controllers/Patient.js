@@ -112,6 +112,7 @@ const Patient = {
     try{
       const t1 = await db.query(mobileQuery, [myID]);
       const users = await db.query(treatmentQuery, [t1.rows[0].mobile_number]);
+      console.log(t1.rows[0].mobile_number);
       if(!users.rows[0]){
         return res.status(400).send({'message':'Cannot find treatment'});
       }
@@ -124,11 +125,12 @@ const Patient = {
       ];
       const ret = await db.query(query, values);
       const tmp = await db.query(update_day, [users.rows[0].treatment_id]);
-      const t2 = await db.query(treatmentQuery, val1);
+      const t2 = await db.query(treatmentQuery, [t1.rows[0].mobile_number]);
       console.log("Day");
       console.log(t2.rows[0].treatment_day);
       return res.status(200).send(ret.rows);
     }catch(error){
+      console.log(error);
       return res.status(400).send(error);
     }
   },
