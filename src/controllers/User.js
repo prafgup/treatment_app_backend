@@ -111,16 +111,16 @@ const User = {
    * @returns {object} user object 
    */
   async registerDoctor(req, res) {
-
+    console.log(req.body)
+    console.log(req.user)
     const myId = req.user.id;
 
     if (!req.body.department || !req.body.designation || !req.body.hospital) {
       return res.status(400).send({'message': 'Some values are missing'});
     }
 
-
-    const registerDoctorUser = `INSERT INTO doctor(user_id, department,designation,hospital,created_date, modified_date, first_name, last_name) VALUES($1, $2, $3, $4,$5, $6, $7, $8) returning *`;
-    const registerStaffUser = `INSERT INTO staff(user_id, department,designation,hospital,created_date, modified_date) VALUES($1, $2, $3, $4,$5, $6) returning *`;
+    const registerDoctorUser = `INSERT INTO doctor(user_id, department, designation, hospital, created_date, modified_date, first_name, last_name) VALUES($1, $2, $3, $4,$5, $6, $7, $8) returning *`;
+    const registerStaffUser = `INSERT INTO staff(user_id, department, designation, hospital, created_date, modified_date) VALUES($1, $2, $3, $4,$5, $6) returning *`;
     const values = [
       myId,
       req.body.department,
@@ -131,13 +131,20 @@ const User = {
       req.body.first_name,
       req.body.last_name
     ];
-
+    const values1 = [
+      myId,
+      req.body.department,
+      req.body.designation,
+      req.body.hospital,
+      moment(new Date()),
+      moment(new Date())
+    ];
     try {
       const { rows } = await db.query(registerDoctorUser, values);
       if (!rows[0]) {
         return res.status(400).send({'message': 'Can not register doctor'});
       }
-      const t1 = await db.query(registerStaffUser, values);
+      const t1 = await db.query(registerStaffUser, values1);
 
       return res.status(200).send({'message': 'Doctor Registered','curr' : rows[0]});
 
@@ -212,7 +219,7 @@ const User = {
     const checkProfile = 'SELECT * FROM profile_page where user_id = $1'
     const mobileQuery = 'SELECT * FROM users WHERE user_id = ($1)';
     const mobileVal = [
-      myID
+      myId
     ];
     const values = [
       myId,
@@ -230,6 +237,7 @@ const User = {
         return res.status(400).send({'message': 'Can not register patient'});
       }
       const t1 = await db.query(mobileQuery, mobileVal);
+      // console.log(t1.rows[0].mobile_number);
       const check = await db.query(checkProfile, [myId]); // check profile exists
       const profilePageValues = [
         myId,
