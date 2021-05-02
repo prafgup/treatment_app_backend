@@ -69,7 +69,8 @@ app.post('/api/v1/questionnaire/get_patient_questionnaire', Auth.verifyToken, Qu
 app.post('/api/v1/questionnaire/fill_questionnaire',Auth.verifyToken,Questionnaire.fill_questionnaire);
 app.post('/api/v1/questionnaire/get_doctor/questionnaire', Auth.verifyToken, Questionnaire.get_questionnaire_doctor);
 app.post('/api/v1/treatment/week_1_2', Auth.verifyToken, Treatment.week_1_2);
-app.post('/api/v1/treatment/week_3', Auth.verifyToken, Treatment.week_3);
+app.post('/api/v1/treatment/week_3_1', Auth.verifyToken, Treatment.week_3_1);
+app.post('/api/v1/treatment/week_3_2', Auth.verifyToken, Treatment.week_3_2);
 app.post('/api/v1/treatment/week_4_5', Auth.verifyToken, Treatment.week_4_5);
 app.post('/api/v1/treatment/week_6', Auth.verifyToken, Treatment.week_6);
 app.post('/api/v1/doctor/star', Auth.verifyToken, DoctorWithDb.star);
@@ -89,7 +90,7 @@ app.get('/api/v1/doctor/get_doctor_profile', Auth.verifyToken, DoctorWithDb.getD
 
 console.log(helper.generateToken('37f8111a-f7ce-441f-946c-c9de32dfdce1'));
 console.log(helper.generateToken('2466d759-d15d-4882-8d2b-20f7139fa26a'));
-console.log(helper.generateToken('37f8111a-f7ce-441f-946c-c9de32dfdce0'));
+console.log(helper.generateToken('7e4d326b-ae74-417b-ae80-53bfa3b0fb00'));
 
 app.get("*",(req,res)=>{
   if(process.env.NODE_ENV==="production"){
