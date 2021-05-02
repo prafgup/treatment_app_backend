@@ -23,7 +23,7 @@ const Profile = {
     const myId = req.user.id;
 
     const getMyProfile = 'SELECT * FROM profile_page where user_id = $1';
-    const createProfile = `INSERT INTO profile_page(user_id, first_name,last_name, dob,profile_pic, home_address,email_id,created_date,modified_date) VALUES($1, $2, $3, $4,$5, $6, $7, $8, $9) returning *`;
+    const createProfile = `INSERT INTO profile_page(user_id, first_name,last_name, dob,profile_pic, home_address,email_id,created_date,modified_date, mobile_number) VALUES($1, $2, $3, $4,$5, $6, $7, $8, $9, $10) returning *`;
     const updateProfile = `UPDATE profile_page SET first_name = ($1), last_name = ($2), dob = ($3), profile_pic = ($4), home_address = ($5), email_id = ($6), modified_date = ($7) WHERE user_id = ($8) returning *`;
     try {
       const { rows } = await db.query(getMyProfile, [myId]);
@@ -32,6 +32,8 @@ const Profile = {
       var myProfileUpdated = null;
 
       if(!rows[0]){
+        const qq1 = 'SELECT * FROM users WHERE user_id = ($1)';
+        const t1 = await db.query(qq1, [myId]);
         const createValues = [
             myId,
             req.body.first_name,
@@ -41,7 +43,8 @@ const Profile = {
             req.body.home_address,
             req.body.email_id,
             moment(new Date()),
-            moment(new Date())
+            moment(new Date()),
+            t1.rows[0].mobile_number
           ];
 
         const newProfile = await db.query(createProfile, createValues);
