@@ -212,7 +212,7 @@ const User = {
     const checkProfile = 'SELECT * FROM profile_page where user_id = $1'
     const mobileQuery = 'SELECT * FROM users WHERE user_id = ($1)';
     const mobileVal = [
-      myID
+      myId
     ];
     const values = [
       myId,
