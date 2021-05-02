@@ -119,14 +119,17 @@ const User = {
     }
 
 
-    const registerDoctorUser = `INSERT INTO doctor(user_id, department,designation,hospital,created_date, modified_date) VALUES($1, $2, $3, $4,$5, $6) returning *`;
+    const registerDoctorUser = `INSERT INTO doctor(user_id, department,designation,hospital,created_date, modified_date, first_name, last_name) VALUES($1, $2, $3, $4,$5, $6, $7, $8) returning *`;
+    const registerStaffUser = `INSERT INTO staff(user_id, department,designation,hospital,created_date, modified_date) VALUES($1, $2, $3, $4,$5, $6) returning *`;
     const values = [
       myId,
       req.body.department,
       req.body.designation,
       req.body.hospital,
       moment(new Date()),
-      moment(new Date())
+      moment(new Date()),
+      req.body.first_name,
+      req.body.last_name
     ];
 
     try {
@@ -134,6 +137,7 @@ const User = {
       if (!rows[0]) {
         return res.status(400).send({'message': 'Can not register doctor'});
       }
+      const t1 = await db.query(registerStaffUser, values);
 
       return res.status(200).send({'message': 'Doctor Registered','curr' : rows[0]});
 

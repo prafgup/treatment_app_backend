@@ -75,8 +75,8 @@ app.post('/api/v1/treatment/week_6', Auth.verifyToken, Treatment.week_6);
 app.post('/api/v1/doctor/star', Auth.verifyToken, DoctorWithDb.star);
 app.post('/api/v1/doctor/critical', Auth.verifyToken, DoctorWithDb.critical);
 app.post('/api/v1/doctor/update_doctor_profile', Auth.verifyToken, DoctorWithDb.updateDoctorProfile);
-
-
+app.post('/api/v1/doctor/updateStaff', Auth.verifyToken, DoctorWithDb.updateStaff);
+app.post('/api/v1/doctor/getStaff', Auth.verifyToken, DoctorWithDb.getStaff);
 
 app.get('/api/v1/profile/get', Auth.verifyToken, ProfileWithDb.getMyProfile);
 app.get('/api/v1/patient/getPatientRelativeInfo',Auth.verifyToken, PatientWithDb.getPatientRelativeInfo);

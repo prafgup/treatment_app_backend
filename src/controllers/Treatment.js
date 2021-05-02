@@ -163,7 +163,7 @@ const Treatment = {
             start_date = new Date(treatment_start_date);
             end_date = new Date(treatment_end_date);
             const daily_query = 'INSERT INTO date_info(treatment_id, exercise_id, today_day, today_date) VALUES($1, $2, $3, $4)';
-            const questionnaire_query = 'INSERT INTO questionnaire(treatment_id, day_no, question, question_hindi, questions_punjabi response, threshold, question_no) VALUES($1, $2, $3, $4, $5, $6, $7, $8)'
+            const questionnaire_query = 'INSERT INTO questionnaire(treatment_id, day_no, question, question_hindi, question_punjabi, response, threshold, question_no) VALUES($1, $2, $3, $4, $5, $6, $7, $8)'
             console.log("3");
             // var cur_date = moment(new Date(treatment_start_date)).add(30,'d').format(date_format);
             // console.log(cur_date);
@@ -188,8 +188,8 @@ const Treatment = {
                     }
                 }
                 for(var j = 11;j<=15;j++){
-                    const val = [treatmentID, i, questions[j-1], questions_h[j-1], questions_p[j-1], null, 0,j];
-                    const tmp2 = await db.query(questionnaire_query, val);
+                    var val = [treatmentID, i, questions[j-1], questions_h[j-1], questions_p[j-1], null, 0,j];
+                    var tmp2 = await db.query(questionnaire_query, val);
                 }
             }
             return res.status(200).send({'message':'Treatment created for this patient'});

@@ -33,6 +33,8 @@ CREATE TABLE IF NOT EXISTS
 CREATE TABLE IF NOT EXISTS
     doctor(
         user_id VARCHAR(256) PRIMARY KEY,
+        first_name VARCHAR(256),
+        last_name VARCHAR(256),
         department VARCHAR(128) NOT NULL,
         designation VARCHAR(128) NOT NULL,
         hospital VARCHAR(128) NOT NULL,
@@ -185,6 +187,7 @@ INSERT INTO staff(user_id, department, designation, hospital, created_date, modi
 
 INSERT INTO users(user_id, mobile_number, created_date, modified_date) VALUES('2466d759-d15d-4882-8d2b-20f7139fa26a',9234567899, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO doctor(user_id, department, designation, hospital, created_date, modified_date) VALUES('2466d759-d15d-4882-8d2b-20f7139fa26a','Ortho', 'Surgeon', 'B',CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO staff(user_id, department, designation, hospital, created_date, modified_date) VALUES('2466d759-d15d-4882-8d2b-20f7139fa26a','Ortho', 'Surgeon', 'B',CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 -- INSERT INTO treatment(treatment_id, treatment_name, doctor_id, patient_id, treatment_start_date, treatment_end_date, staff_1) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 'knee surgery', '2b6941fa-525e-45e9-88f1-582d19af6c34', '37f8111a-f7ce-441f-946c-c9de32dfdce8', CURRENT_DATE, CURRENT_DATE + 30, '2b6941fa-525e-45e9-88f1-582d19af6c34');
 
 -- INSERT INTO date_info(treatment_id, exercise_id, today_day, today_date) VALUES('446dead8-0161-47f1-a902-d03efbee4072', 1, 1, CURRENT_DATE);

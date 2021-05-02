@@ -25,7 +25,7 @@ const Doctor = {
 
     const getMyProfile = 'SELECT * FROM doctor where user_id = ($1)';
     const createProfile = `INSERT INTO doctor(user_id, department, designation, hospital, created_date, modified_date) VALUES($1, $2, $3, $4,$5, $6) returning *`;
-    const updateProfile = `UPDATE profile_page SET department = ($1), designation = ($2), hospital = ($3), modified_date = ($4) WHERE user_id = ($5) returning *`;
+    const updateProfile = `UPDATE profile_page SET department = ($1), designation = ($2), hospital = ($3), modified_date = ($4) WHERE user_id = ($5), first_name = ($6), last_name = ($7) returning *`;
     try {
       const { rows } = await db.query(getMyProfile, [myId]);
 
@@ -50,7 +50,9 @@ const Doctor = {
             req.body.department,
             req.body.hospital,
             moment(new Date()),
-            myId
+            myId,
+            req.body.first_name,
+            req.body.last_name
           ];
 
           const updatedDoctorProfile = await db.query(updateProfile, updateValues);
@@ -71,7 +73,7 @@ const Doctor = {
     console.log(req.body)
     const myId = req.user.id;
     console.log(myId);
-    const getPatientData = 'SELECT users.mobile_number, profile_page.first_name, profile_page.last_name, profile_page.profile_pic, treatment.treatment_start_date, treatment.treatment_name, treatment.treatment_day, exercises.exercise_name, date_info.marked_by_patient, date_info.marked_by_relative, treatment.starred, treatment.critical FROM ((((treatment INNER JOIN profile_page ON treatment.patient_number = profile_page.mobile_number AND treatment.doctor_id = ($1)) INNER JOIN date_info ON date_info.treatment_id = treatment.treatment_id AND date_info.today_day = treatment.treatment_day AND treatment.treatment_day > 0) INNER JOIN exercises ON date_info.exercise_id = exercises.exercise_id) INNER JOIN users ON users.mobile_number = treatment.patient_number)';
+    const getPatientData = 'SELECT treatment.treatment_id, users.mobile_number, profile_page.first_name, profile_page.last_name, profile_page.profile_pic, treatment.treatment_start_date, treatment.treatment_name, treatment.treatment_day, exercises.exercise_name, date_info.marked_by_patient, date_info.marked_by_relative, treatment.starred, treatment.critical FROM ((((treatment INNER JOIN profile_page ON treatment.patient_number = profile_page.mobile_number AND (treatment.doctor_id = ($1) OR treatment.staff_1 = ($1) OR treatment.staff_2 = ($1))) INNER JOIN date_info ON date_info.treatment_id = treatment.treatment_id AND date_info.today_day = treatment.treatment_day AND treatment.treatment_day > 0) INNER JOIN exercises ON date_info.exercise_id = exercises.exercise_id) INNER JOIN users ON users.mobile_number = treatment.patient_number)';
     // const allT = 'SELECT users.mobile_number, profile_page.first_name, profile_page.last_name, profile_page.profile_pic, treatment.treatment_name, treatment.treatment_day, exercises.exercise_name, date_info.marked_by_patient, date_info.marked_by_relative FROM ((((treatment INNER JOIN profile_page ON treatment.patient_id = profile_page.user_id AND treatment.doctor_id = ($1)) INNER JOIN date_info ON date_info.treatment_id = treatment.treatment_id AND date_info.today_day = 5) INNER JOIN exercises ON date_info.exercise_id = exercises.exercise_id) INNER JOIN users ON users.user_id = treatment.patient_id)';
     // const allT = 'SELECT * FROM treatment WHERE doctor_id = ($1)';
     // const allT = 'SELECT * FROM date_info WHERE today_day = 5';
@@ -86,7 +88,7 @@ const Doctor = {
         // console.log(n);
         var sorted = [];
         while(i<n){
-          sorted.push([rows[i].mobile_number, rows[i].first_name, rows[i].last_name, rows[i].profile_pic, rows[i].treatment_name, rows[i].treatment_day, rows[i].marked_by_patient, rows[i].marked_by_relative, rows[i].starred, rows[i].critical]);
+          sorted.push([rows[i].mobile_number, rows[i].first_name, rows[i].last_name, rows[i].profile_pic, rows[i].treatment_name, rows[i].treatment_day, rows[i].marked_by_patient, rows[i].marked_by_relative, rows[i].starred, rows[i].critical, rows[i].treatment_id]);
           i++;
         }
         // console.log(sorted);
@@ -113,7 +115,7 @@ const Doctor = {
           if(patient_cnt > 0){
             patient_cnt = 1;
           }
-          arr.push([sorted[i][0], sorted[i][1], sorted[i][2], sorted[i][3], sorted[i][4], sorted[i][5], patient_cnt, relative_cnt, sorted[i][8], sorted[i][9]]);
+          arr.push([sorted[i][0], sorted[i][1], sorted[i][2], sorted[i][3], sorted[i][4], sorted[i][5], patient_cnt, relative_cnt, sorted[i][8], sorted[i][9], sorted[i][10]]);
           i = tmp+1;
         }
         console.log(arr);
@@ -131,7 +133,7 @@ const Doctor = {
     const mobileQuery = 'SELECT * FROM users WHERE mobile_number = ($1)';
     const query = 'SELECT * FROM treatment WHERE treatment.doctor_id = ($1) AND treatment.patient_number = ($2) AND treatment.treatment_day > 0';
     // const query2 = 'SELECT date_info.today_date, date_info.marked_by_patient, date_info.marked_by_relative FROM (treatment INNER JOIN date_info ON treatment.treatment_id = date_info.treatment_id AND treatment.doctor_id = ($1) AND treatment.patient_id = ($2) AND date_info.today_date BETWEEN treatment.treatment_start_date AND ($3))';
-    const query2 = 'SELECT date_info.today_day, exercises.exercise_name, date_info.marked_by_patient, date_info.marked_by_relative FROM ((treatment INNER JOIN date_info ON treatment.treatment_id = date_info.treatment_id AND treatment.doctor_id = ($1) AND treatment.patient_number = ($2) AND date_info.today_date <= ($4) AND treatment.treatment_id = ($3)) INNER JOIN exercises ON exercises.exercise_id = date_info.exercise_id)';
+    const query2 = 'SELECT treatment.treatment_id, date_info.today_day, exercises.exercise_name, date_info.marked_by_patient, date_info.marked_by_relative FROM ((treatment INNER JOIN date_info ON treatment.treatment_id = date_info.treatment_id AND treatment.doctor_id = ($1) AND treatment.patient_number = ($2) AND date_info.today_date <= ($4) AND treatment.treatment_id = ($3)) INNER JOIN exercises ON exercises.exercise_id = date_info.exercise_id)';
     const cur_date = moment(new Date()).format(date_format);
     try{
       const tmp1 = await db.query(mobileQuery, [mobile_number]);
@@ -213,6 +215,45 @@ const Doctor = {
       }
       const updateQuery = 'UPDATE treatment SET critical = ($1) WHERE treatment_id = ($2)';
       const rows = await db.query(updateQuery, [star, t2.rows[0].treatment_id]);
+      return res.status(200).send(rows);
+    }catch(error){
+      return res.status(400).send(error);
+    }
+  },
+
+  async updateStaff(req, res){
+    const treatmentID = req.body.treatmentID;
+    const myID = req.user.id;
+    const mobileQuery = 'SELECT * FROM users WHERE user.mobile_number = ($1)';
+    const m1 = req.body.mobile_number1;
+    const m2 = req.body.mobile_number2;
+    var staff_1 = null;
+    var staff_2 = null;
+    try{
+      const t1 = await db.query(mobileQuery, [m1]);
+      if(t1.rows[0]){
+        staff_1 = t1.rows[0].user_id;
+      }
+      const t2 = await db.query(mobileQuery, [m2]);
+      if(t2.rows[0]){
+        staff_2 = t2.rows[0].user_id;
+      }
+      const query = 'UPDATE treatment SET staff_1 = ($1), staff_2 = ($2) WHERE treatment_id = ($3)';
+      const rows = await db.query(query, [staff_1, staff_2, treatmentID]);
+      return res.status(200).send({'message':'Updated staff details'});
+    }catch(error){
+      return res.status(400).send(error);
+    }
+  },
+
+  async getStaff(req, res){
+    const myID = req.user.id;
+    const treatmentID = req.body.treatmentID;
+    const query = 'SELECT staff_1, staff_2 FROM treatment WHERE treatment_id = ($1)';
+    try{
+      const t1 = await db.query(query, [treatmentID]);
+      const mobileQuery = 'SELECT mobile_number FROM users WHERE user_id = ($1) OR user_id = ($2)';
+      const {rows} = await db.query(mobileQuery, [t1.rows[0].staff_1, t1.rows[0].staff_2]);
       return res.status(200).send(rows);
     }catch(error){
       return res.status(400).send(error);
