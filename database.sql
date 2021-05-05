@@ -1,7 +1,7 @@
 -- -- Change AUTO_INCREMENT to IDENTITY while pushing to database, pgadmin doesnt accept AUTO_INCREMENT
 -- DROP TABLE IF EXISTS date_info;
 -- DROP TABLE IF EXISTS questionnaire;
--- DROP TABLE IF EXISTS treatment;
+DROP TABLE IF EXISTS treatment;
 -- DROP TABLE IF EXISTS exercises;
 -- DROP TABLE IF EXISTS staff;
 -- DROP TABLE IF EXISTS relative_table;
@@ -98,6 +98,8 @@ CREATE TABLE IF NOT EXISTS
         patient_number VARCHAR(256) NOT NULL,
         treatment_start_date DATE NOT NULL,
         treatment_end_date DATE,
+        questionnaire_fill_date DATE,
+        questionnaire_done int DEFAULT 0,
         treatment_day int DEFAULT 1,
         staff_1 VARCHAR(256),
         staff_2 VARCHAR(256),

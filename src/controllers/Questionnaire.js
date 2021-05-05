@@ -61,10 +61,32 @@ const Questionnaire = {
                 const updateQuery1 = 'UPDATE treatment SET starred = 0 WHERE treatment_id = ($1)';
                 const tmp2 = await db.query(updateQuery1, [ret.rows[0].treatment_id]);      
             }
+            console.log(cur_date);
             return res.status(200).send({'message':'Successfully updated the response for this question'});
         }catch(error){
             return res.status(400).send(error);
         } 
+    },
+
+    async updateQuestionnaireInfo(req, res){
+        const myID = req.user.id;
+        const query = 'SELECT * FROM treatment WHERE patient_number = ($1) AND treatment_day > 0';
+        const mobileQuery = 'SELECT * FROM users WHERE user_id = ($1)';
+        const cur_date = moment(new Date()).format(date_format);
+        try{
+            const t1 = await db.query(mobileQuery, [myID]);
+            const ret = await db.query(query, [t1.rows[0].mobile_number]);
+            if(!ret.rows[0]){
+                return res.status(400).send({'message':'Treatment not found for this patient'});
+            }
+            const updateLastQuestionnaire = 'UPDATE treatment SET questionnaire_fill_date = ($1) WHERE treatment_id = ($2)';
+            const tt1 = await db.query(updateLastQuestionnaire, [cur_date, ret.rows[0].treatment_id]);
+            const updateQuestionnaireFilled = 'UPDATE treatment SET questionnaire_done = questionnaire_done + 1 WHERE treatment_id = ($1)';
+            const tt2 = await db.query(updateQuestionnaireFilled, [ret.rows[0].treatment_id]);
+            return res.status(200).send({'message':'Updated last date and number of times filled'});
+        }catch(error){
+            return res.status(400).send(error);
+        }
     },
 
     async get_questionnaire_doctor(req, res){// for doctor side

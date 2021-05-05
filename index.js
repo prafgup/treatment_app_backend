@@ -87,10 +87,11 @@ app.get('/api/v1/patient/get_request_status', Auth.verifyToken, PatientWithDb.ge
 app.get('/api/v1/relative/getRequests', Auth.verifyToken, RelativewithDb.getRequests);
 app.get('/api/v1/relative/getFriendRequests', Auth.verifyToken, RelativewithDb.getPatientRequests);
 app.get('/api/v1/doctor/get_doctor_profile', Auth.verifyToken, DoctorWithDb.getDoctorProfile);
+app.get('/api/v1/questionnaire/updateQuestionnaireInfo', Auth.verifyToken, Questionnaire.updateQuestionnaireInfo);
 
 console.log(helper.generateToken('37f8111a-f7ce-441f-946c-c9de32dfdce1'));
-console.log(helper.generateToken('493d0182-a9c3-4d77-a3e0-f215879600f2'));
-console.log(helper.generateToken('7e4d326b-ae74-417b-ae80-53bfa3b0fb00'));
+console.log(helper.generateToken('2466d759-d15d-4882-8d2b-20f7139fa26a'));
+console.log(helper.generateToken('faa1cda9-92c4-4d46-95f3-b7cbb6078966'));
 
 app.get("*",(req,res)=>{
   if(process.env.NODE_ENV==="production"){
