@@ -8,10 +8,9 @@
     "npm": "6.14.4"
   },
   "scripts": {
-    "start": "node index.js",
-    "heroku-postbuild": "cd client && npm install && npm run build"
+    "start": "node index.js"
   },
-  "author": "Pradyumn, Praful ne thoda kaam kiya hoga",
+  "author": "Pradyumn, Praful",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.0",
