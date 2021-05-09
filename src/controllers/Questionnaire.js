@@ -91,11 +91,10 @@ const Questionnaire = {
 
     async get_questionnaire_doctor(req, res){// for doctor side
         const doctorID = req.user.id;
-        const cur_day = req.body.day;
         const mobile_number = req.body.mobile_number;//patient mobile number
         const mobileQuery = 'SELECT * FROM users WHERE mobile_number = ($1)';
         const query = 'SELECT * FROM treatment WHERE patient_number = ($1) AND treatment_day > 0';
-        const cur_date = moment(new Date()).format(date_format);
+        // const cur_date = moment(new Date()).format(date_format);
         try{
             const users = await db.query(mobileQuery, [mobile_number]);
             if(!users.rows[0]){
@@ -108,10 +107,16 @@ const Questionnaire = {
             if(!ret.rows[0]){
                 return res.status(400).send({'message':'Treatment not found for this patient'});
             }
+            // console.log(ret.rows[0].questionnaire_fill_date);
+            var cur_date = moment(ret.rows[0].questionnaire_fill_date);
+            var start_date = moment(ret.rows[0].treatment_start_date);
+            var cur_day = cur_date.diff(start_date, 'days')+1;
+            // console.log(cur_day)
             const query2 = 'SELECT question_no, question, question_hindi, question_punjabi, response FROM questionnaire WHERE treatment_id = ($1) AND day_no = ($2)';
             const rows = await db.query(query2, [ret.rows[0].treatment_id, cur_day]);
             return res.status(200).send(rows.rows);
         }catch(error){
+            console.log(error);
             return res.status(400).send(error);
         }
     },
