@@ -70,14 +70,14 @@ const Treatment = {
             const questionnaire_query = 'INSERT INTO questionnaire(treatment_id, day_no, question, question_hindi, question_punjabi, response, threshold, question_no) VALUES($1, $2, $3, $4, $5, $6, $7, $8)'
             // Day 1-4 so that the app doesnt break
             for(var i = 1;i<5;i++){            
-                var cur_date = moment(new Date(treatment_start_date)).add(i,'d').format(date_format);
+                var cur_date = moment(new Date(treatment_start_date)).add(i-1,'d').format(date_format);
                 var val = [treatmentID, 26, i, cur_date];
                 var tmp2 = await db.query(daily_query, val);
             }
             // Day 5-10
             for(var i = 5;i<=10;i++){
                 // console.log("here1");
-            var cur_date = moment(new Date(treatment_start_date)).add(i,'d').format(date_format);
+            var cur_date = moment(new Date(treatment_start_date)).add(i-1,'d').format(date_format);
                 // console.log(cur_date);
                 for(var j = 1;j<=5;j++){
                     // console.log(start_date + i);
@@ -105,7 +105,7 @@ const Treatment = {
                 // console.log("here2");
             }
             for(var i = 11;i<=15;i++){
-                var cur_date = moment(new Date(treatment_start_date)).add(i,'d').format(date_format);
+                var cur_date = moment(new Date(treatment_start_date)).add(i-1,'d').format(date_format);
                 for(var j = 1;j<=5;j++){
                     var val = [treatmentID, j, i, cur_date];
                     var tmp2 = await db.query(daily_query, val);
@@ -169,7 +169,7 @@ const Treatment = {
             // var cur_date = moment(new Date(treatment_start_date)).add(30,'d').format(date_format);
             // console.log(cur_date);
             for(var i = 16;i<=22;i++){
-                var cur_date = moment(new Date(treatment_start_date)).add(i,'d').format(date_format);
+                var cur_date = moment(new Date(treatment_start_date)).add(i-1,'d').format(date_format);
                 for(var j = 1;j<=5;j++){
                     if(j!=11){
                         var val = [treatmentID, j, i, cur_date];
@@ -237,7 +237,7 @@ const Treatment = {
             // var cur_date = moment(new Date(treatment_start_date)).add(30,'d').format(date_format);
             // console.log(cur_date);
             for(var i = 23;i<=30;i++){
-                var cur_date = moment(new Date(treatment_start_date)).add(i,'d').format(date_format);
+                var cur_date = moment(new Date(treatment_start_date)).add(i-1,'d').format(date_format);
                 for(var j = 1;j<=5;j++){
                     if(j!=11){
                         var val = [treatmentID, j, i, cur_date];
@@ -303,7 +303,7 @@ const Treatment = {
             const questionnaire_query = 'INSERT INTO questionnaire(treatment_id, day_no, question, question_hindi, question_punjabi, response, threshold, question_no) VALUES($1, $2, $3, $4, $5, $6, $7, $8)'
             console.log("4");
             for(var i = 31;i<=37;i++){
-                var cur_date = moment(new Date(treatment_start_date)).add(i,'d').format(date_format);
+                var cur_date = moment(new Date(treatment_start_date)).add(i-1,'d').format(date_format);
                 for(var j = 13;j<=18;j++){
                     var val = [treatmentID, j, i, cur_date];
                     var tmp2 = await db.query(daily_query, val);
@@ -315,7 +315,7 @@ const Treatment = {
             }
             console.log("5");
             for(var i = 38;i<=44;i++){
-                var cur_date = moment(new Date(treatment_start_date)).add(i,'d').format(date_format);
+                var cur_date = moment(new Date(treatment_start_date)).add(i-1,'d').format(date_format);
                 for(var j = 13;j<=21;j++){
                     var val = [treatmentID, j, i, cur_date];
                     var tmp2 = await db.query(daily_query, val);
@@ -363,7 +363,7 @@ const Treatment = {
             const daily_query = 'INSERT INTO date_info(treatment_id, exercise_id, today_day, today_date) VALUES($1, $2, $3, $4)';
             const questionnaire_query = 'INSERT INTO questionnaire(treatment_id, day_no, question, question_hindi, question_punjabi, response, threshold, question_no) VALUES($1, $2, $3, $4, $5, $6, $7, $8)'
             for(var i = 45;i<=51;i++){
-                var cur_date = moment(new Date(treatment_start_date)).add(i,'d').format(date_format);
+                var cur_date = moment(new Date(treatment_start_date)).add(i-1,'d').format(date_format);
                 for(var j = 22;j<=25;j++){
                     var val = [treatmentID, j, i, cur_date];
                     var tmp2 = await db.query(daily_query, val);
