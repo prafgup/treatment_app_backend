@@ -148,11 +148,11 @@ const Treatment = {
                 return res.status(400).send({'message':'Doctor not found'});
             }
             // console.log(mobile_number);
-            const user = await db.query(mobileQuery, [mobile_number]);
-            if(!user.rows[0]){
-                return res.status(400).send({'message':'User not registered'});
-            }
-            const patientID = user.rows[0].user_id;
+            // const user = await db.query(mobileQuery, [mobile_number]);
+            // if(!user.rows[0]){
+            //     return res.status(400).send({'message':'User not registered'});
+            // }
+            // const patientID = user.rows[0].user_id;
             // const treatmentID = uuid();
             // console.log(treatmentID);
             const questions = ['Pain and/or swelling in the knee', 'knee bending/flexion target (90 degree) achievable?', 'Incomplete knee extension/straightening of the knee', 'Unable to follow the given protocol as mentioned', 'Difficulty in doing the exercises as many times as mentioned', 'Unable to perform sit-to-stand at all', 'Unable to do sit-to-stand as many times as mentioned', 'Pain in the thighs during/after exercise', 'Pain in the knee during/after exercise', 'Unable to walk for more than 2 steps with the walker', 'Unable to perform sit-to-stand at all', 'Unable to do sit-to-stand as many times as mentioned', 'Pain in the thighs during/after exercise', 'Pain in the knee during/after exercise', 'Unable to walk for more than 2 steps with the walker', 'Unable to do the exercises as mentioned', 'Unable to hold the desired position as mentioned for the desired time', 'Balance problem while performing exercises 1-4', 'Difficulty in progressing further to increased holding time while doing exercise', 'Pain and/or stiffness in the knees'];
@@ -216,11 +216,11 @@ const Treatment = {
                 return res.status(400).send({'message':'Doctor not found'});
             }
             // console.log(mobile_number);
-            const user = await db.query(mobileQuery, [mobile_number]);
-            if(!user.rows[0]){
-                return res.status(400).send({'message':'User not registered'});
-            }
-            const patientID = user.rows[0].user_id;
+            // const user = await db.query(mobileQuery, [mobile_number]);
+            // if(!user.rows[0]){
+            //     return res.status(400).send({'message':'User not registered'});
+            // }
+            // const patientID = user.rows[0].user_id;
             // const treatmentID = uuid();
             // console.log(treatmentID);
             const questions = ['Pain and/or swelling in the knee', 'knee bending/flexion target (90 degree) achievable?', 'Incomplete knee extension/straightening of the knee', 'Unable to follow the given protocol as mentioned', 'Difficulty in doing the exercises as many times as mentioned', 'Unable to perform sit-to-stand at all', 'Unable to do sit-to-stand as many times as mentioned', 'Pain in the thighs during/after exercise', 'Pain in the knee during/after exercise', 'Unable to walk for more than 2 steps with the walker', 'Unable to perform sit-to-stand at all', 'Unable to do sit-to-stand as many times as mentioned', 'Pain in the thighs during/after exercise', 'Pain in the knee during/after exercise', 'Unable to walk for more than 2 steps with the walker', 'Unable to do the exercises as mentioned', 'Unable to hold the desired position as mentioned for the desired time', 'Balance problem while performing exercises 1-4', 'Difficulty in progressing further to increased holding time while doing exercise', 'Pain and/or stiffness in the knees'];
@@ -284,11 +284,11 @@ const Treatment = {
                 return res.status(400).send({'message':'Doctor not found'});
             }
             // console.log(mobile_number);
-            const user = await db.query(mobileQuery, [mobile_number]);
-            if(!user.rows[0]){
-                return res.status(400).send({'message':'User not registered'});
-            }
-            const patientID = user.rows[0].user_id;
+            // const user = await db.query(mobileQuery, [mobile_number]);
+            // if(!user.rows[0]){
+            //     return res.status(400).send({'message':'User not registered'});
+            // }
+            // const patientID = user.rows[0].user_id;
             // const treatmentID = uuid();
             // console.log(treatmentID);
             const questions = ['Pain and/or swelling in the knee', 'knee bending/flexion target (90 degree) achievable?', 'Incomplete knee extension/straightening of the knee', 'Unable to follow the given protocol as mentioned', 'Difficulty in doing the exercises as many times as mentioned', 'Unable to perform sit-to-stand at all', 'Unable to do sit-to-stand as many times as mentioned', 'Pain in the thighs during/after exercise', 'Pain in the knee during/after exercise', 'Unable to walk for more than 2 steps with the walker', 'Unable to perform sit-to-stand at all', 'Unable to do sit-to-stand as many times as mentioned', 'Pain in the thighs during/after exercise', 'Pain in the knee during/after exercise', 'Unable to walk for more than 2 steps with the walker', 'Unable to do the exercises as mentioned', 'Unable to hold the desired position as mentioned for the desired time', 'Balance problem while performing exercises 1-4', 'Difficulty in progressing further to increased holding time while doing exercise', 'Pain and/or stiffness in the knees'];
@@ -344,11 +344,11 @@ const Treatment = {
                 return res.status(400).send({'message':'Doctor not found'});
             }
             // console.log(mobile_number);
-            const user = await db.query(mobileQuery, [mobile_number]);
-            if(!user.rows[0]){
-                return res.status(400).send({'message':'User not registered'});
-            }
-            const patientID = user.rows[0].user_id;
+            // const user = await db.query(mobileQuery, [mobile_number]);
+            // if(!user.rows[0]){
+            //     return res.status(400).send({'message':'User not registered'});
+            // }
+            // const patientID = user.rows[0].user_id;
             // const treatmentID = uuid();
             // console.log(treatmentID);
             const questions = ['Pain and/or swelling in the knee', 'knee bending/flexion target (90 degree) achievable?', 'Incomplete knee extension/straightening of the knee', 'Unable to follow the given protocol as mentioned', 'Difficulty in doing the exercises as many times as mentioned', 'Unable to perform sit-to-stand at all', 'Unable to do sit-to-stand as many times as mentioned', 'Pain in the thighs during/after exercise', 'Pain in the knee during/after exercise', 'Unable to walk for more than 2 steps with the walker', 'Unable to perform sit-to-stand at all', 'Unable to do sit-to-stand as many times as mentioned', 'Pain in the thighs during/after exercise', 'Pain in the knee during/after exercise', 'Unable to walk for more than 2 steps with the walker', 'Unable to do the exercises as mentioned', 'Unable to hold the desired position as mentioned for the desired time', 'Balance problem while performing exercises 1-4', 'Difficulty in progressing further to increased holding time while doing exercise', 'Pain and/or stiffness in the knees'];
