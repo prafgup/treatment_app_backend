@@ -90,7 +90,7 @@ app.get('/api/v1/doctor/get_doctor_profile', Auth.verifyToken, DoctorWithDb.getD
 app.get('/api/v1/questionnaire/updateQuestionnaireInfo', Auth.verifyToken, Questionnaire.updateQuestionnaireInfo);
 
 console.log(helper.generateToken('37f8111a-f7ce-441f-946c-c9de32dfdce1'));
-console.log(helper.generateToken('2466d759-d15d-4882-8d2b-20f7139fa26a'));
+console.log(helper.generateToken('bae08d07-0355-4c15-bbf9-ef3f5f3dfd0d'));
 console.log(helper.generateToken('faa1cda9-92c4-4d46-95f3-b7cbb6078966'));
 
 app.get("*",(req,res)=>{

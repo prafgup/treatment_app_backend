@@ -73,14 +73,20 @@ const Doctor = {
     console.log(req.body)
     const myId = req.user.id;
     console.log(myId);
-    const getPatientData = 'SELECT treatment.treatment_id, users.mobile_number, profile_page.first_name, profile_page.last_name, profile_page.profile_pic, treatment.treatment_start_date, treatment.treatment_name, treatment.treatment_day, exercises.exercise_name, date_info.marked_by_patient, date_info.marked_by_relative, treatment.starred, treatment.critical, treatment.treatment_start_date, treatment.questionnaire_fill_date, treatment.questionnaire_done FROM ((((treatment INNER JOIN profile_page ON treatment.patient_number = profile_page.mobile_number AND (treatment.doctor_id = ($1) OR treatment.staff_1 = ($1) OR treatment.staff_2 = ($1))) INNER JOIN date_info ON date_info.treatment_id = treatment.treatment_id AND date_info.today_day = treatment.treatment_day AND treatment.treatment_day > 0) INNER JOIN exercises ON date_info.exercise_id = exercises.exercise_id) INNER JOIN users ON users.mobile_number = treatment.patient_number)';
-    // const allT = 'SELECT users.mobile_number, profile_page.first_name, profile_page.last_name, profile_page.profile_pic, treatment.treatment_name, treatment.treatment_day, exercises.exercise_name, date_info.marked_by_patient, date_info.marked_by_relative FROM ((((treatment INNER JOIN profile_page ON treatment.patient_id = profile_page.user_id AND treatment.doctor_id = ($1)) INNER JOIN date_info ON date_info.treatment_id = treatment.treatment_id AND date_info.today_day = 5) INNER JOIN exercises ON date_info.exercise_id = exercises.exercise_id) INNER JOIN users ON users.user_id = treatment.patient_id)';
-    // const allT = 'SELECT * FROM treatment WHERE doctor_id = ($1)';
+    const mobileQuery = 'SELECT * FROM users WHERE user_id = ($1)';
+    const getPatientData = 'SELECT treatment.treatment_id, users.mobile_number, profile_page.first_name, profile_page.last_name, profile_page.profile_pic, treatment.treatment_start_date, treatment.treatment_name, treatment.treatment_day, exercises.exercise_name, date_info.marked_by_patient, date_info.marked_by_relative, treatment.starred, treatment.critical, treatment.treatment_start_date, treatment.questionnaire_fill_date, treatment.questionnaire_done FROM ((((treatment INNER JOIN profile_page ON treatment.patient_number = profile_page.mobile_number AND (treatment.doctor_id = ($1) OR treatment.staff_1 = ($1) OR treatment.staff_2 = ($1))) INNER JOIN date_info ON date_info.treatment_id = treatment.treatment_id AND date_info.today_date = ($2) AND treatment.treatment_day > 0) INNER JOIN exercises ON date_info.exercise_id = exercises.exercise_id) INNER JOIN users ON users.mobile_number = treatment.patient_number)';
+    // const allT = 'SELECT users.mobile_number, profile_page.first_name, profile_page.last_name, profile_page.profile_pic, treatment.treatment_name, treatment.treatment_day, exercises.exercise_name, date_info.marked_by_patient, date_info.marked_by_relative FROM ((((treatment INNER JOIN profile_page ON treatment.patient_number = profile_page.mobile_number AND (treatment.doctor_id = ($1) OR treatment.staff_1 = ($1) OR treatment.staff_2 = ($1))) INNER JOIN date_info ON date_info.treatment_id = treatment.treatment_id AND date_info.today_day = 20) INNER JOIN exercises ON date_info.exercise_id = exercises.exercise_id) INNER JOIN users ON users.mobile_number = treatment.patient_number)';
+    // const allT = 'SELECT * FROM treatment WHERE (doctor_id = ($1) OR staff_1 = ($1) OR staff_2 = ($1))';
+    // const allT = 'SELECT treatment.treatment_id, users.user_id, profile_page.first_name FROM (((treatment INNER JOIN users ON treatment.patient_number = users.mobile_number AND (treatment.doctor_id = ($1) OR treatment.staff_1 = ($1) OR treatment.staff_2 = ($1))) INNER JOIN profile_page ON profile_page.mobile_number = treatment.patient_number) INNER JOIN date_info ON date_info.treatment_id = treatment.treatment_id)';
     // const allT = 'SELECT * FROM date_info WHERE today_day = 5';
+    const cur_date = moment(new Date()).format(date_format);
     try{
         // const ret = await db.query(allT,[myId]);
         // console.log(ret.rows);
-        const { rows } = await db.query(getPatientData, [myId]);
+        // const tt1 = await db.query(mobileQuery, [myId]);
+        // const mobile_number = tt1.rows[0].mobile_number;
+        // console.log(mobile_number);
+        const { rows } = await db.query(getPatientData, [myId, cur_date]);
         // console.log(rows);
         var arr = [];
         var i = 0;
@@ -122,6 +128,7 @@ const Doctor = {
         return res.status(200).send(arr);
     }
     catch(error){
+        console.log(error);
         return res.status(400).send(error);
     }
   },
@@ -131,9 +138,9 @@ const Doctor = {
     const doctorID = req.user.id;
     const mobile_number = req.body.mobile_number;
     const mobileQuery = 'SELECT * FROM users WHERE mobile_number = ($1)';
-    const query = 'SELECT * FROM treatment WHERE treatment.doctor_id = ($1) AND treatment.patient_number = ($2) AND treatment.treatment_day > 0';
+    const query = 'SELECT * FROM treatment WHERE (treatment.doctor_id = ($1) OR treatment.staff_1 = ($1) OR treatment.staff_2 = ($1)) AND treatment.patient_number = ($2) AND treatment.treatment_day > 0';
     // const query2 = 'SELECT date_info.today_date, date_info.marked_by_patient, date_info.marked_by_relative FROM (treatment INNER JOIN date_info ON treatment.treatment_id = date_info.treatment_id AND treatment.doctor_id = ($1) AND treatment.patient_id = ($2) AND date_info.today_date BETWEEN treatment.treatment_start_date AND ($3))';
-    const query2 = 'SELECT treatment.treatment_id, date_info.today_day, exercises.exercise_name, date_info.marked_by_patient, date_info.marked_by_relative FROM ((treatment INNER JOIN date_info ON treatment.treatment_id = date_info.treatment_id AND treatment.doctor_id = ($1) AND treatment.patient_number = ($2) AND date_info.today_date <= ($4) AND treatment.treatment_id = ($3)) INNER JOIN exercises ON exercises.exercise_id = date_info.exercise_id)';
+    const query2 = 'SELECT treatment.treatment_id, date_info.today_day, exercises.exercise_name, date_info.marked_by_patient, date_info.marked_by_relative FROM ((treatment INNER JOIN date_info ON treatment.treatment_id = date_info.treatment_id AND (treatment.doctor_id = ($1) OR treatment.staff_1 = ($1) OR treatment.staff_2 = ($1)) AND treatment.patient_number = ($2) AND date_info.today_date <= ($4) AND treatment.treatment_id = ($3)) INNER JOIN exercises ON exercises.exercise_id = date_info.exercise_id)';
     const cur_date = moment(new Date()).format(date_format);
     try{
       const tmp1 = await db.query(mobileQuery, [mobile_number]);
