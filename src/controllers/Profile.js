@@ -38,7 +38,7 @@ const Profile = {
             myId,
             req.body.first_name,
             req.body.last_name,
-            req.body.dob,
+            req.body.dob == "" ? null : req.body.dob,
             req.body.profile_pic,
             req.body.home_address,
             req.body.email_id,
